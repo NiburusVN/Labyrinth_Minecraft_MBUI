@@ -1,11 +1,57 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
-autonumber
+enum "<<enumeration>> \n Entity"{
+    OBJECTIF1;
+    OBJECTIF2;
+    OBJECTIF3;
+    OBJECTIF4;
+    OBJECTIF5;
+    OBJECTIF6;
+    OBJECTIF7;
+    OBJECTIF8;
+    OBJECTIF9;
+    OBJECTIF10;
+    OBJECTIF11;
+    OBJECTIF12;
+    OBJECTIF13;
+    OBJECTIF14;
+    OBJECTIF15;
+    OBJECTIF16;
+    OBJECTIF17;
+    OBJECTIF18;
+    OBJECTIF19;
+    OBJECTIF20;
+    OBJECTIF21;
+    OBJECTIF22;
+    OBJECTIF23;
+    OBJECTIF24;
+}
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+enum "<<enumeration>> \n Orientation"{
+    NORTH;
+    SOUTH;
+    EAST;
+    WEST;
+}
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+abstract class Tuile <<abstract>>{
+    -m_entity: Entity
+    -m_orientation: Orientation
+    +setOrientation()
+    +getOrientation(): Orientation
+    +setEntity()
+    +getEntity(): Entity
+}
+
+class Corridor extends Tuile{
+    +<<Create>> Corridor()
+}
+
+class Intersection extends Tuile{
+    +<<Create>> Intersection()
+}
+
+class Corner extends Tuile{
+    +<<Create>> Corner()
+}
 @enduml
