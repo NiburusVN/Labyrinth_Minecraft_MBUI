@@ -19,9 +19,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2pLL7wy8GoQh6Y9sHw226AgHYXe" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -33,7 +33,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Rendu1",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Buihe/OneDrive/Bureau/a31-labyrinthe"
+    "last_opened_file_path": "C:/Users/Buihe/OneDrive/Bureau/a31-labyrinthe/uml"
   }
 }]]></component>
   <component name="SharedIndexes">
