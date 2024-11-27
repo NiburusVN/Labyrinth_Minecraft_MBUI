@@ -1,57 +1,122 @@
 @startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam style strictuml
+hide empty members
 
-enum "<<enumeration>> \n Entity"{
-    OBJECTIF1;
-    OBJECTIF2;
-    OBJECTIF3;
-    OBJECTIF4;
-    OBJECTIF5;
-    OBJECTIF6;
-    OBJECTIF7;
-    OBJECTIF8;
-    OBJECTIF9;
-    OBJECTIF10;
-    OBJECTIF11;
-    OBJECTIF12;
-    OBJECTIF13;
-    OBJECTIF14;
-    OBJECTIF15;
-    OBJECTIF16;
-    OBJECTIF17;
-    OBJECTIF18;
-    OBJECTIF19;
-    OBJECTIF20;
-    OBJECTIF21;
-    OBJECTIF22;
-    OBJECTIF23;
-    OBJECTIF24;
+package model{
+    class Player{
+        +<<Create>> Player()
+        -_posX: Integer
+        -_posY: Integer
+        +getPosX(): Integer
+        +getPosY(): Integer
+        +moveTo( posX:Integer, posY:Integer )
+    }
+
+    enum "<<enumeration>> \n Entity"{
+        OBJECTIF1
+        OBJECTIF2
+        OBJECTIF3
+        OBJECTIF4
+        OBJECTIF5
+        OBJECTIF6
+        OBJECTIF7
+        OBJECTIF8
+        OBJECTIF9
+        OBJECTIF10
+        OBJECTIF11
+        OBJECTIF12
+        OBJECTIF13
+        OBJECTIF14
+        OBJECTIF15
+        OBJECTIF16
+        OBJECTIF17
+        OBJECTIF18
+        OBJECTIF19
+        OBJECTIF20
+        OBJECTIF21
+        OBJECTIF22
+        OBJECTIF23
+        OBJECTIF24
+    }
+
+    enum "<<enumeration>> \n Orientation"{
+        NORTH
+        SOUTH
+        EAST
+        WEST
+    }
+
+    abstract class BoardTile <<abstract>>{
+        +setOrientation()
+        +getOrientation(): Orientation
+        +setEntity()
+        +getEntity(): Entity
+    }
+
+    class Hallway extends BoardTile{
+        +<<Create>> Corridor()
+    }
+
+    class Intersection extends BoardTile{
+        +<<Create>> Intersection()
+    }
+
+    class Corner extends BoardTile{
+        +<<Create>> Corner()
+    }
+
+    class StartingTile extends BoardTile{
+        +<<Create>> StartingTile()
+    }
+
+    class TileFactory{
+        +<<Create>> TileFactory()
+        +createCorner() : Corner
+        +createIntersection() : Intersection
+        +createHallway() : Hallway
+        +createStartingTile(): StartingTile
+    }
+
+    class GameBoard{
+        +<<Create>> GameBoard()
+        +init_board( tileFactory:TileFactory )
+        +moveTiles( tileInHand:BoardTile, posX: Integer, posY: Integer)
+    }
 }
 
-enum "<<enumeration>> \n Orientation"{
-    NORTH;
-    SOUTH;
-    EAST;
-    WEST;
+package view{
+    class GameWindow{
+        +<<Create>> GameWindow( controller:GameController )
+    }
 }
 
-abstract class Tuile <<abstract>>{
-    -m_entity: Entity
-    -m_orientation: Orientation
-    +setOrientation()
-    +getOrientation(): Orientation
-    +setEntity()
-    +getEntity(): Entity
+package controller{
+    class GameController{
+        +<<Create>> GameController(gameboard:GameBoard, players:Player[4])
+    }
 }
 
-class Corridor extends Tuile{
-    +<<Create>> Corridor()
-}
 
-class Intersection extends Tuile{
-    +<<Create>> Intersection()
-}
 
-class Corner extends Tuile{
-    +<<Create>> Corner()
-}
+TileFactory ..> BoardTile :<<uses>>
+TileFactory ..> Hallway :<<uses>>
+TileFactory ..> StartingTile :<<uses>>
+TileFactory ..> Intersection :<<uses>>
+TileFactory ..> Corner :<<uses>>
+
+GameBoard ..> TileFactory :<<uses>>
+GameBoard ..> BoardTile :<<uses>>
+
+BoardTile *-> "1\n- _orientation" "<<enumeration>> \n Orientation" : > points to
+BoardTile o-> "1\n- _entity" "<<enumeration>> \n Entity": > has
+GameWindow ..> GameController :<<uses>>
+
+Player o-> "6\n- _entityInProgress" "<<enumeration>> \n Entity": > has
+Player o-> "6\n- _entityAccomplished" "<<enumeration>> \n Entity": > has
+
+GameController *-> "4\n- _players" Player: > has
+GameController *-> "1\n- _gameboard" GameBoard: > has
+
 @enduml
