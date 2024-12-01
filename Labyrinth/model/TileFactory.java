@@ -1,6 +1,7 @@
 package model;
 
 public class TileFactory {
+
     public TileFactory() {}
 
     public TileTemplate createCorner(){return new Corner();}

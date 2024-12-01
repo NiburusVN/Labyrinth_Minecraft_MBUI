@@ -20,8 +20,8 @@ package model {
         +<<Create>> Player()
         -_posX: Integer
         -_posY: Integer
-        +addObjective(objective: Entity)
-        +removeActualObjective()
+        +addGoal(goal: Entity)
+        +removeActualGoal()
         +getPosX(): Integer
         +getPosY(): Integer
         +moveTo(posX: Integer, posY: Integer)
@@ -64,9 +64,8 @@ package model {
     abstract class TileTemplate <<abstract>> {
         #<<Create>> TileTemplate()
         #_entries: Boolean[4]
-        + {abstract} setOrientation()
+        +{abstract] setOrientation(oriention: Direction)
         +getOrientation(): Direction
-        +setOrientation(oriention: Direction)
         +setEntity(entity: Entity)
         +getEntity(): Entity
         +setEntries(entries: Boolean[4])
@@ -104,6 +103,7 @@ package model {
         +<<Create>> GameBoard()
         +init_board(tileFactory: TileFactory)
         +insertExtraTile(posX: Integer, posY: Integer)
+        +getExtraTile(): TileTemplate
     }
 
     interface GameObserver <<interface>> {
@@ -144,13 +144,13 @@ TileTemplate "1" o-right-> "1\n #_entity" "<<enumeration>> \n Entity" : > has
 
 GameWindow "1" ..> "1" GameController : <<uses>>
 
-Player "1" o-right-> "6\n- _entitiesDeck" "<<enumeration>> \n Entity" : > has
+Player "1" o-right-> "6\n- _goalsDeck" "<<enumeration>> \n Entity" : > has
 
 GameController "1" *-down-> "4\n  -_players" Player : > has
 GameController "1" *-up-> "1\n  -_gameboard" GameBoard : > has
 
-GameBoard "1" o-left-> "*\n -_boardTiles" "TileTemplate" : > contains
-GameBoard "1" o-right-> "1\n - _extraTile" "TileTemplate" : > has
+GameBoard "1" o-left-> "49\n -_boardTiles" "TileTemplate" : > contains
+GameBoard "1" o-> "1\n - _extraTile" "TileTemplate" : > has
 
 GameWindow "1" *-down-> "1\n- controller" GameController : > send user requests
 GameBoard "1" o-up-> "*\n- _observers" "GameObserver" : > observe

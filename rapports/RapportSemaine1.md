@@ -16,7 +16,7 @@ Afin de créer les 50 tuiles nécessaires, on a décidé de faire une TileFactor
 La factory est le patron adapté ici puisqu'on a plusieurs classes qui héritent d'une classe abstraite et elle est faite pour pouvoir créer plusieurs instances différentes. ~~On notera que c'est le seul patron de création qu'on a vu aussi et il n'y a pas assez d'attribut pour en faire un patron Builder (recherche personnel)~~.
 
 JOUEURS:
-Par rapport aux Joueurs, il n'y a pas grand chose de spécifique, c'est une classe avec plusieurs attributs dont _entitiesDeck, un tableau de 6 objectifs, une position principalement définie par les attributs _posX et _posY. (on peut rajouter des noms pour différencier les 4 joueurs, mais on n'en est pas encore là, YAGNI!)
+Par rapport aux Joueurs, il n'y a pas grand chose de spécifique, c'est une classe avec plusieurs attributs dont _goalsDeck, un tableau de 6 objectifs, une position principalement définie par les attributs _posX et _posY. (on peut rajouter des noms pour différencier les 4 joueurs, mais on n'en est pas encore là, YAGNI!)
 Leurs déplacements seront gérés par un controlleur.
 
 OBJECTIFS:
