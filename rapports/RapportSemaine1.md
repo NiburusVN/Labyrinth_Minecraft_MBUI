@@ -31,7 +31,7 @@ En ce qui concerne les modèles, on aura besoin d'un controller afin de gérer l
 
 Controller:
 On a créé une classe GameController qui va gérer l'avancé du jeu.
-Elle aura un terrain, 4 joueurs sous le format d'un tableau ~~et devrait être un Singleton~~.
+Elle aura un terrain, 4 joueurs sous le format d'une liste ~~et devrait être un Singleton~~.
 Elle s'occupera du déplacement des joueurs, le déplacement du labyrinth avec la 50e tuile et s'occupe grosso modo des règles du jeu (mettre le pion à l'autre bout s'il est expulsé du terrain, vérification d'un objectif atteint, etc).
 
 Et enfin, les vues!
