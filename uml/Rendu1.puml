@@ -21,6 +21,8 @@ package model {
         +<<Create>> Player()
         -_posX: Integer
         -_posY: Integer
+        +addObjective(objective: Entity)
+        +removeActualObjective()
         +getPosX(): Integer
         +getPosY(): Integer
         +moveTo(posX: Integer, posY: Integer)
@@ -61,30 +63,34 @@ package model {
     }
 
     abstract class TileTemplate <<abstract>> {
+        #<<Create>> TileTemplate()
+        #_entries: Boolean[4]
         + {abstract} setOrientation()
         +getOrientation(): Direction
-        +setEntity()
+        +setOrientation(oriention: Direction)
+        +setEntity(entity: Entity)
         +getEntity(): Entity
+        +setEntries(entries: Boolean[4])
     }
 
     class Hallway extends TileTemplate {
         +<<Create>> Corridor()
-        +setOrientation()
+        +setOrientation(oriention: Direction) {redefines}
     }
 
     class Intersection extends TileTemplate {
         +<<Create>> Intersection()
-        +setOrientation()
+        +setOrientation(oriention: Direction) {redefines}
     }
 
     class Corner extends TileTemplate {
         +<<Create>> Corner()
-        +setOrientation()
+        +setOrientation(oriention: Direction) {redefines}
     }
 
     class StartingTile extends Corner {
         +<<Create>> StartingTile()
-        +setOrientation()
+        +setOrientation(oriention: Direction) {redefines}
     }
 
     class TileFactory {
@@ -98,7 +104,7 @@ package model {
     class GameBoard {
         +<<Create>> GameBoard()
         +init_board(tileFactory: TileFactory)
-        +moveTiles(posX: Integer, posY: Integer)
+        +insertExtraTile(posX: Integer, posY: Integer)
     }
 
     interface GameObserver <<interface>> {
@@ -134,8 +140,8 @@ TileFactory "1" ..> "1" Corner : <<uses>>
 
 GameBoard "1" ..> "1" TileFactory : <<uses>>
 
-TileTemplate "1" *-left-> "1\n- _orientation" "<<enumeration>> \n Direction" : > points to
-TileTemplate "1" o-right-> "1\n- _entity" "<<enumeration>> \n Entity" : > has
+TileTemplate "1" *-left-> "1\n #_orientation" "<<enumeration>> \n Direction" : > points to
+TileTemplate "1" o-right-> "1\n #_entity" "<<enumeration>> \n Entity" : > has
 
 GameWindow "1" ..> "1" GameController : <<uses>>
 
