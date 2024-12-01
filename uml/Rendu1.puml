@@ -6,13 +6,12 @@ skinparam style strictuml
 skinparam linetype ortho
 hide empty members
 
-' Ajuster les marges et espacements pour allonger les flèches
 skinparam padding 10
 skinparam classPadding 20
 skinparam classMargin 40
 skinparam ranksep 100
 skinparam nodesep 100
-skinparam ArrowFontSize 10
+skinparam ArrowFontSize 11
 skinparam ArrowColor black
 skinparam ArrowThickness 1
 
@@ -131,7 +130,7 @@ package controller {
     }
 }
 
-' Relations entre les classes, avec cardinalités, libellés, et directions
+
 TileFactory "1" ..> "1" TileTemplate : <<uses>>
 TileFactory "1" ..> "1" Hallway : <<uses>>
 TileFactory "1" ..> "1" StartingTile : <<uses>>
@@ -154,7 +153,7 @@ GameBoard "1" o-left-> "*\n -_boardTiles" "TileTemplate" : > contains
 GameBoard "1" o-right-> "1\n - _extraTile" "TileTemplate" : > has
 
 GameWindow "1" *-down-> "1\n- controller" GameController : > send user requests
-GameBoard "*" o-up-> "*\n- _observers" "GameObserver" : > observe
+GameBoard "1" o-up-> "*\n- _observers" "GameObserver" : > observe
 Player "*" o-right-> "*\n- _observers" "GameObserver" : > observe
 
 @enduml
