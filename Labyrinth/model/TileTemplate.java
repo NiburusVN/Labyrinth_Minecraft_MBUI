@@ -20,6 +20,10 @@ public abstract class TileTemplate {
         }
     }
 
+    public TileTemplate(Direction orientation) {
+        this.setOrientation(orientation);
+    }
+
     public abstract void setOrientation(Direction orientation);
 
     public Direction getOrientation(){

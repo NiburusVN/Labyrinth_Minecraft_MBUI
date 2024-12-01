@@ -1,4 +1,11 @@
 package model;
 
-public class GameObserver {
+public interface GameObserver {
+    abstract void updateGameBoard();
+
+    abstract void updatePlayerPosition();
+
+    abstract void updateGoalsDeck();
+
+    abstract void updateGameStatus();
 }

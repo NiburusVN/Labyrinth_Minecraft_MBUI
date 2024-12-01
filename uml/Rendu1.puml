@@ -63,8 +63,9 @@ package model {
 
     abstract class TileTemplate <<abstract>> {
         #<<Create>> TileTemplate()
+        #<<Create>> TileTemplate(orientation: Direction)
         #_entries: Boolean[4]
-        +{abstract] setOrientation(oriention: Direction)
+        +{abstract] setOrientation(orientation: Direction)
         +getOrientation(): Direction
         +setEntity(entity: Entity)
         +getEntity(): Entity
@@ -73,22 +74,22 @@ package model {
 
     class Hallway extends TileTemplate {
         +<<Create>> Corridor()
-        +setOrientation(oriention: Direction) {redefines}
+        +setOrientation(orientation: Direction) {redefines}
     }
 
     class Intersection extends TileTemplate {
         +<<Create>> Intersection()
-        +setOrientation(oriention: Direction) {redefines}
+        +setOrientation(orientation: Direction) {redefines}
     }
 
     class Corner extends TileTemplate {
         +<<Create>> Corner()
-        +setOrientation(oriention: Direction) {redefines}
+        +setOrientation(orientation: Direction) {redefines}
     }
 
     class StartingTile extends Corner {
         +<<Create>> StartingTile()
-        +setOrientation(oriention: Direction) {redefines}
+        +setOrientation(orientation: Direction) {redefines}
     }
 
     class TileFactory {
@@ -108,8 +109,8 @@ package model {
 
     interface GameObserver <<interface>> {
         +updateGameBoardTiles()
-        +updatePlayersPosition()
-        +updateSpecialCards()
+        +updatePlayerPosition()
+        +updateGoalsDeck()
         +updateGameStatus()
     }
 }

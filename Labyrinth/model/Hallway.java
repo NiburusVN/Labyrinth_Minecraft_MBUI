@@ -9,6 +9,10 @@ public class Hallway extends TileTemplate {
         super();
     }
 
+    public Hallway(Direction orientation) {
+        super(orientation);
+    }
+
     @Override
     public void setOrientation(Direction orientation) {
         // 1er indice : Ouest, 2ème indice : Nord, 3ème indice: Est, 4ème indice: Sud
