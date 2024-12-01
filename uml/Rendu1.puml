@@ -48,27 +48,31 @@ package model{
         WEST
     }
 
-    abstract class BoardTile <<abstract>>{
-        +setOrientation()
+    abstract class TileTemplate <<abstract>>{
+        + {abstract} setOrientation()
         +getOrientation(): Orientation
         +setEntity()
         +getEntity(): Entity
     }
 
-    class Hallway extends BoardTile{
+    class Hallway extends TileTemplate{
         +<<Create>> Corridor()
+        +setOrientation()
     }
 
-    class Intersection extends BoardTile{
+    class Intersection extends TileTemplate{
         +<<Create>> Intersection()
+        +setOrientation()
     }
 
-    class Corner extends BoardTile{
+    class Corner extends TileTemplate{
         +<<Create>> Corner()
+        +setOrientation()
     }
 
-    class StartingTile extends BoardTile{
+    class StartingTile extends Corner{
         +<<Create>> StartingTile()
+        +setOrientation()
     }
 
     class TileFactory{
@@ -82,13 +86,24 @@ package model{
     class GameBoard{
         +<<Create>> GameBoard()
         +init_board( tileFactory:TileFactory )
-        +moveTiles( tileInHand:BoardTile, posX: Integer, posY: Integer)
+        +moveTiles( tileInHand:TileTemplate, posX: Integer, posY: Integer)
+    }
+
+    interface GameObserver <<interface>>{
+        +updateGameBoardTiles()
+        +updatePlayersPosition()
+        +updateSpecialCards()
+        +updateGameStatus()
     }
 }
 
 package view{
-    class GameWindow{
+    class GameWindow implements model.GameObserver{
         +<<Create>> GameWindow( controller:GameController )
+    }
+
+    class EndingWindow implements model.GameObserver{
+        +<<Create>> EndingWindow( controller:GameController )
     }
 }
 
@@ -100,17 +115,17 @@ package controller{
 
 
 
-TileFactory ..> BoardTile :<<uses>>
+TileFactory ..> TileTemplate :<<uses>>
 TileFactory ..> Hallway :<<uses>>
 TileFactory ..> StartingTile :<<uses>>
 TileFactory ..> Intersection :<<uses>>
 TileFactory ..> Corner :<<uses>>
 
 GameBoard ..> TileFactory :<<uses>>
-GameBoard ..> BoardTile :<<uses>>
+GameBoard ..> TileTemplate :<<uses>>
 
-BoardTile *-> "1\n- _orientation" "<<enumeration>> \n Orientation" : > points to
-BoardTile o-> "1\n- _entity" "<<enumeration>> \n Entity": > has
+TileTemplate *-> "1\n- _orientation" "<<enumeration>> \n Orientation" : > points to
+TileTemplate o-> "1\n- _entity" "<<enumeration>> \n Entity": > has
 GameWindow ..> GameController :<<uses>>
 
 Player o-> "6\n- _entityInProgress" "<<enumeration>> \n Entity": > has
@@ -118,5 +133,9 @@ Player o-> "6\n- _entityAccomplished" "<<enumeration>> \n Entity": > has
 
 GameController *-> "4\n- _players" Player: > has
 GameController *-> "1\n- _gameboard" GameBoard: > has
+
+GameWindow *-> "1\n- controller" GameController: > send user requests
+GameBoard o-> "*\n- _observers" "GameObserver": > observe
+Player o-> "*\n- _observers" "GameObserver": > observe
 
 @enduml
