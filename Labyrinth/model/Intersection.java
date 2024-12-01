@@ -1,5 +1,5 @@
 package model;
 
-public class Intersection extends BoardTile {
+public class Intersection extends TileTemplate {
     public Intersection() {}
 }

@@ -1,6 +1,6 @@
 package model;
 
-public class Corner extends BoardTile{
+public class Corner extends TileTemplate {
     public Corner() {}
 
 

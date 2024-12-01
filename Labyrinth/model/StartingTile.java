@@ -1,5 +1,5 @@
 package model;
 
-public class StartingTile extends BoardTile {
+public class StartingTile extends Corner {
     public StartingTile() {}
 }

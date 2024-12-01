@@ -1,5 +1,5 @@
 package model;
 
-public class Hallway extends BoardTile{
+public class Hallway extends TileTemplate {
     public Hallway() {}
 }

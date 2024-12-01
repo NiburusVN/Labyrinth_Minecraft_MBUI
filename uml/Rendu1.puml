@@ -1,20 +1,32 @@
 @startuml
+scale 2
 skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 skinparam style strictuml
+skinparam linetype ortho
 hide empty members
 
-package model{
-    class Player{
+' Ajuster les marges et espacements pour allonger les flèches
+skinparam padding 10
+skinparam classPadding 20
+skinparam classMargin 40
+skinparam ranksep 100
+skinparam nodesep 100
+skinparam ArrowFontSize 10
+skinparam ArrowColor black
+skinparam ArrowThickness 1
+
+package model {
+    class Player {
         +<<Create>> Player()
         -_posX: Integer
         -_posY: Integer
         +getPosX(): Integer
         +getPosY(): Integer
-        +moveTo( posX:Integer, posY:Integer )
+        +moveTo(posX: Integer, posY: Integer)
     }
 
-    enum "<<enumeration>> \n Entity"{
+    enum "<<enumeration>> \n Entity" {
         OBJECTIF1
         OBJECTIF2
         OBJECTIF3
@@ -41,55 +53,55 @@ package model{
         OBJECTIF24
     }
 
-    enum "<<enumeration>> \n Orientation"{
+    enum "<<enumeration>> \n Direction" {
         NORTH
         SOUTH
         EAST
         WEST
     }
 
-    abstract class TileTemplate <<abstract>>{
+    abstract class TileTemplate <<abstract>> {
         + {abstract} setOrientation()
-        +getOrientation(): Orientation
+        +getOrientation(): Direction
         +setEntity()
         +getEntity(): Entity
     }
 
-    class Hallway extends TileTemplate{
+    class Hallway extends TileTemplate {
         +<<Create>> Corridor()
         +setOrientation()
     }
 
-    class Intersection extends TileTemplate{
+    class Intersection extends TileTemplate {
         +<<Create>> Intersection()
         +setOrientation()
     }
 
-    class Corner extends TileTemplate{
+    class Corner extends TileTemplate {
         +<<Create>> Corner()
         +setOrientation()
     }
 
-    class StartingTile extends Corner{
+    class StartingTile extends Corner {
         +<<Create>> StartingTile()
         +setOrientation()
     }
 
-    class TileFactory{
+    class TileFactory {
         +<<Create>> TileFactory()
-        +createCorner() : Corner
-        +createIntersection() : Intersection
-        +createHallway() : Hallway
+        +createCorner(): Corner
+        +createIntersection(): Intersection
+        +createHallway(): Hallway
         +createStartingTile(): StartingTile
     }
 
-    class GameBoard{
+    class GameBoard {
         +<<Create>> GameBoard()
-        +init_board( tileFactory:TileFactory )
-        +moveTiles( tileInHand:TileTemplate, posX: Integer, posY: Integer)
+        +init_board(tileFactory: TileFactory)
+        +moveTiles(posX: Integer, posY: Integer)
     }
 
-    interface GameObserver <<interface>>{
+    interface GameObserver <<interface>> {
         +updateGameBoardTiles()
         +updatePlayersPosition()
         +updateSpecialCards()
@@ -97,45 +109,46 @@ package model{
     }
 }
 
-package view{
-    class GameWindow implements model.GameObserver{
-        +<<Create>> GameWindow( controller:GameController )
+package view {
+    class GameWindow implements model.GameObserver {
+        +<<Create>> GameWindow(controller: GameController)
     }
 
-    class EndingWindow implements model.GameObserver{
-        +<<Create>> EndingWindow( controller:GameController )
-    }
-}
-
-package controller{
-    class GameController{
-        +<<Create>> GameController(gameboard:GameBoard, players:Player[4])
+    class EndingWindow implements model.GameObserver {
+        +<<Create>> EndingWindow(controller: GameController)
     }
 }
 
+package controller {
+    class GameController {
+        +<<Create>> GameController(gameboard: GameBoard, players: Player[4])
+    }
+}
 
+' Relations entre les classes, avec cardinalités, libellés, et directions
+TileFactory "1" ..> "1" TileTemplate : <<uses>>
+TileFactory "1" ..> "1" Hallway : <<uses>>
+TileFactory "1" ..> "1" StartingTile : <<uses>>
+TileFactory "1" ..> "1" Intersection : <<uses>>
+TileFactory "1" ..> "1" Corner : <<uses>>
 
-TileFactory ..> TileTemplate :<<uses>>
-TileFactory ..> Hallway :<<uses>>
-TileFactory ..> StartingTile :<<uses>>
-TileFactory ..> Intersection :<<uses>>
-TileFactory ..> Corner :<<uses>>
+GameBoard "1" ..> "1" TileFactory : <<uses>>
 
-GameBoard ..> TileFactory :<<uses>>
-GameBoard ..> TileTemplate :<<uses>>
+TileTemplate "1" *-left-> "1\n- _orientation" "<<enumeration>> \n Direction" : > points to
+TileTemplate "1" o-right-> "1\n- _entity" "<<enumeration>> \n Entity" : > has
 
-TileTemplate *-> "1\n- _orientation" "<<enumeration>> \n Orientation" : > points to
-TileTemplate o-> "1\n- _entity" "<<enumeration>> \n Entity": > has
-GameWindow ..> GameController :<<uses>>
+GameWindow "1" ..> "1" GameController : <<uses>>
 
-Player o-> "6\n- _entityInProgress" "<<enumeration>> \n Entity": > has
-Player o-> "6\n- _entityAccomplished" "<<enumeration>> \n Entity": > has
+Player "1" o-right-> "6\n- _entitiesDeck" "<<enumeration>> \n Entity" : > has
 
-GameController *-> "4\n- _players" Player: > has
-GameController *-> "1\n- _gameboard" GameBoard: > has
+GameController "1" *-down-> "4\n  -_players" Player : > has
+GameController "1" *-up-> "1\n  -_gameboard" GameBoard : > has
 
-GameWindow *-> "1\n- controller" GameController: > send user requests
-GameBoard o-> "*\n- _observers" "GameObserver": > observe
-Player o-> "*\n- _observers" "GameObserver": > observe
+GameBoard "1" o-left-> "*\n -_boardTiles" "TileTemplate" : > contains
+GameBoard "1" o-right-> "1\n - _extraTile" "TileTemplate" : > has
+
+GameWindow "1" *-down-> "1\n- controller" GameController : > send user requests
+GameBoard "*" o-up-> "*\n- _observers" "GameObserver" : > observe
+Player "*" o-right-> "*\n- _observers" "GameObserver" : > observe
 
 @enduml

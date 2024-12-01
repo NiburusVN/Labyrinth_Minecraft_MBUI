@@ -2,11 +2,11 @@ package model;
 
 import java.util.Random;
 
-public abstract class BoardTile {
+public abstract class TileTemplate {
     private static Random rand = new Random();
     Direction _orientation;
     Entity _entity = null; //default
-    public BoardTile() {
+    public TileTemplate() {
         Integer r = rand.nextInt(4);
         switch (r) {
             case 0 -> _orientation = Direction.North;

@@ -7,11 +7,11 @@ Tout d'abord, les Modèles...
 TUILES (patron Template):
 Pour nos tuiles, nous avons décidé d'en faire un Template TileTemplate qui aura 3 filles pour chaque type de tuiles.
 Le template est nécessaire afin que chaque type retourne le chemin valide correcte pour son type (Hallway laisse passer en haut et en bas OU à droite et à gauche)
-La tuile aura un attribut orientation qui vient d'une enum contenant les 4 directions afin d'avoir le sens d'affichage et sera utilisé pour connaitres les chemins valides.
+La tuile aura un attribut _orientation qui vient d'une enum contenant les 4 directions afin d'avoir le sens d'affichage et sera utilisé pour connaitres les chemins valides.
 
 TERRAIN (+ patron Factory):
 On a une classe GameBoard, qui gère des tuiles pour créer le terrain (il pourra donc créer et gérer des tuiles).
-Elle aura un attribut Tile pour la pièce qui déplace le labyrinth (la 50e pièce) et un tableau de tableau de Tile afin de représenter le terrain.
+Elle aura un attribut _extraTile pour la pièce qui déplace le labyrinth (la 50e pièce) et un tableau de tableau de TileTemplate afin de représenter le terrain.
 Afin de créer les 50 tuiles nécessaires, on a décidé de faire une TileFactory qui sera utilisé par le GameBoard;
 La factory est le patron adapté ici puisqu'on a plusieurs classes qui héritent d'une classe abstraite et elle est faite pour pouvoir créer plusieurs instances différentes. ~~On notera que c'est le seul patron de création qu'on a vu aussi et il n'y a pas assez d'attribut pour en faire un patron Builder (recherche personnel)~~.
 
