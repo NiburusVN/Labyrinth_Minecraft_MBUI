@@ -11,7 +11,7 @@ public class Player {
     private List<Entity> _goalsDeck;
     private ArrayList<GameObserver> _observers;
 
-    public Player(Integer [] position, Entity [] goals) {
+    public Player() {
         this._posX = null;
         this._posY = null;
         this._goalsDeck = new ArrayList<>(6);
