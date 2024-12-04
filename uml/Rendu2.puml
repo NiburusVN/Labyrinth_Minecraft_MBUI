@@ -1,0 +1,184 @@
+@startuml
+scale 2
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+skinparam style strictuml
+skinparam linetype ortho
+hide empty members
+
+skinparam padding 10
+skinparam classPadding 20
+skinparam classMargin 40
+skinparam ranksep 100
+skinparam nodesep 100
+skinparam ArrowFontSize 14
+skinparam ArrowColor black
+skinparam ArrowThickness 1
+
+class Main{
+    +main( args:String[] )
+}
+
+package model {
+    class Game{
+        -_playerTurn : Integer
+        <<Create>> Game()
+        +StartGame()
+        +nextPlayer()
+        +movePlayer(posX, posY)
+        +moveTilesLine()
+    }
+
+    class Player {
+        +<<Create>> Player()
+        -_posX: Integer
+        -_posY: Integer
+        +addGoal(goal: Entity)
+        +removeCurrentGoal()
+        +getPosX(): Integer
+        +getPosY(): Integer
+        +moveTo(posX: Integer, posY: Integer)
+    }
+
+    enum "<<enumeration>> \n Entity" {
+        OBJECTIF1
+        OBJECTIF2
+        OBJECTIF3
+        OBJECTIF4
+        OBJECTIF5
+        OBJECTIF6
+        OBJECTIF7
+        OBJECTIF8
+        OBJECTIF9
+        OBJECTIF10
+        OBJECTIF11
+        OBJECTIF12
+        OBJECTIF13
+        OBJECTIF14
+        OBJECTIF15
+        OBJECTIF16
+        OBJECTIF17
+        OBJECTIF18
+        OBJECTIF19
+        OBJECTIF20
+        OBJECTIF21
+        OBJECTIF22
+        OBJECTIF23
+        OBJECTIF24
+    }
+
+    enum "<<enumeration>> \n Direction" {
+        NORTH
+        SOUTH
+        EAST
+        WEST
+    }
+
+    abstract class TileTemplate <<abstract>> {
+        #<<Create>> TileTemplate()
+        #<<Create>> TileTemplate(orientation: Direction)
+        +setOrientation(orientation: Direction)
+        +getOrientation(): Direction
+        +setEntity(entity: Entity)
+        +getEntity(): Entity
+        +{abstract}getEntries(): Boolean[4]
+    }
+
+    class Hallway extends TileTemplate {
+        +<<Create>> Hallway()
+        +<<Create>> Hallway(orientation: Direction)
+        +setOrientation(orientation: Direction) {redefines}
+    }
+
+    class Intersection extends TileTemplate {
+        +<<Create>> Intersection()
+        +<<Create>> Intersection(orientation: Direction)
+        +setOrientation(orientation: Direction) {redefines}
+    }
+
+    class Corner extends TileTemplate {
+        +<<Create>> Corner()
+        +<<Create>> Corner(orientation: Direction)
+        +setOrientation(orientation: Direction) {redefines}
+    }
+
+    class StartingTile extends Corner {
+        +<<Create>> StartingTile()
+        +<<Create>> StartingTile(orientation: Direction)
+        +setOrientation(orientation: Direction) {redefines}
+    }
+
+    class TileFactory {
+        +<<Create>> TileFactory()
+        +createCorner(): Corner
+        +createIntersection(): Intersection
+        +createHallway(): Hallway
+        +createStartingTile(): StartingTile
+        +createCorner(orientation: Direction): Corner
+        +createIntersection(orientation: Direction): Intersection
+        +createHallway(orientation: Direction): Hallway
+        +createStartingTile(orientation: Direction): StartingTile
+    }
+
+    class GameBoard {
+        +<<Create>> GameBoard()
+        +init_board(tileFactory: TileFactory)
+        +insertExtraTile(posX: Integer, posY: Integer)
+        +getExtraTile(): TileTemplate
+    }
+
+    interface GameObserver <<interface>> {
+        +updateGameBoardTiles()
+        +updatePlayerPosition()
+        +updateGoalsDeck()
+        +updateGameStatus()
+    }
+}
+
+package view {
+    class GameWindow implements model.GameObserver {
+        +<<Create>> GameWindow(controller: GameController)
+    }
+
+    class EndingWindow implements model.GameObserver {
+        +<<Create>> EndingWindow(controller: GameController)
+    }
+}
+
+package controller {
+    class GameController {
+        +<<Create>> GameController()
+    }
+}
+
+
+TileFactory "1" ..> "1" TileTemplate : <<uses>>
+TileFactory "1" ..> "1" Hallway : <<uses>>
+TileFactory "1" ..> "1" StartingTile : <<uses>>
+TileFactory "1" ..> "1" Intersection : <<uses>>
+TileFactory "1" ..> "1" Corner : <<uses>>
+TileFactory "1" ..> "1" "<<enumeration>> \n Direction" : <<uses>>
+Player "1" ..> "1" "<<enumeration>> \n Entity" : <<uses>>
+
+GameBoard "1" ..> "1" TileFactory : <<uses>>
+TileTemplate "1" ..> "1" "<<enumeration>> \n Entity" : <<uses>>
+
+TileTemplate "1" *-left-> "1\n #_orientation" "<<enumeration>> \n Direction" : > points to
+TileTemplate "1" o-right-> "1\n #_entity" "<<enumeration>> \n Entity" : > has
+
+Player "1" o-right-> "6\n- _goalsDeck" "<<enumeration>> \n Entity" : > has
+
+Game "1" *-down-> "4\n  -_players" Player : > has
+Game "1" *-up-> "1\n  -_gameboard" GameBoard : > has
+
+GameBoard "1" o-left-> "49\n -_boardTiles" "TileTemplate" : > contains
+GameBoard "1" o-> "1\n - _extraTile" "TileTemplate" : > has
+
+GameController "1" *-down-> "1\n- _game" Game : > chooses
+
+GameWindow "1" *-up-> "1\n- controller" GameController : > send user requests
+EndingWindow "1" *-up-> "1\n- controller" GameController : > send user requests
+
+Game "*" o-right-> "*\n- _observers" "GameObserver" : > observe
+
+@enduml
