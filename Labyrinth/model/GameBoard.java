@@ -72,10 +72,50 @@ public class GameBoard {
         }
     }
 
+    /// InsertExtraTile est le décalage du terrain lors du placement de la 50e tuile
+    /// posX et posY correspondent à l'entrée de la 50e tuile
     public void insertExtraTile(Integer posX, Integer posY){
-        TileTemplate oldTile = this._boardTiles.get(posY).get(posX);
-        this._boardTiles.get(posY).set(posX, this._extraTile);
-        this._extraTile = oldTile;
+        TileTemplate oldTile;
+        if(posY == 0){ //du haut vers le bas
+            oldTile = this._boardTiles.get(6).get(posX); // récupération de la tuile de sortie
+
+            for(int i = 1; i <= 6 ; i++)
+                this._boardTiles.get(7-i).set(posX, this._boardTiles.get(6-i).get(posX)); //décalage des tuiles
+
+            this._boardTiles.get(0).set(posX, _extraTile); //ajout de la tuile
+            this._extraTile = oldTile; //nouvelle tuile à placer
+        }
+        else if(posY == 6){ //du bas vers le haut
+            oldTile = this._boardTiles.get(0).get(posX);
+
+            for(int i = 0; i < 6 ; i++)
+                this._boardTiles.get(i).set(posX, this._boardTiles.get(i+1).get(posX));
+
+            this._boardTiles.get(6).set(posX, _extraTile);
+            this._extraTile = oldTile;
+        }
+        else if(posX == 0){ //de la gauche vers la droite
+            oldTile = this._boardTiles.get(posY).get(6);
+
+            for(int i = 1; i <= 6 ; i++)
+                this._boardTiles.get(posY).set(7-i, this._boardTiles.get(posY).get(6-i));
+
+            this._boardTiles.get(posY).set(0, this._extraTile);
+            this._extraTile = oldTile;
+        }
+        else if(posX == 6){ //de la droite vers la gauche
+            oldTile = this._boardTiles.get(posY).get(0);
+
+            for(int i = 0; i < 6 ; i++)
+                this._boardTiles.get(posY).set(i, this._boardTiles.get(posY).get(i+1));
+
+            this._boardTiles.get(posY).set(6, _extraTile);
+            this._extraTile = oldTile;
+        }
+        else{
+            System.out.println("Erreur dans insertExtraTile ; les positions données sont invalides\n" +
+                    "X = "+ posX + " et Y = " + posY + "\n");
+        }
     }
 
     public TileTemplate getExtraTile(){
