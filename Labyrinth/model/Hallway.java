@@ -1,5 +1,7 @@
 package model;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,20 +16,21 @@ public class Hallway extends TileTemplate {
     }
 
     @Override
-    public void setOrientation(Direction orientation) {
+    public ArrayList<Boolean> getEntries() {
         // 1er indice : Ouest, 2ème indice : Nord, 3ème indice: Est, 4ème indice: Sud
-        this._orientation = orientation;
+        ArrayList<Boolean> entries = new ArrayList<Boolean>();
 
         switch (this._orientation) {
+
             case Direction.North:
             case Direction.South:
-                this.setEntries(Arrays.asList(false, true, false, true));
-                break;
+                entries.addAll(Arrays.asList(false, true, false, true));
 
             case Direction.East:
             case Direction.West:
-                this.setEntries(Arrays.asList(false, true, false, true));
-                break;
+                entries.addAll(Arrays.asList(true, false, true, false));
+
         }
+        return entries;
     }
 }

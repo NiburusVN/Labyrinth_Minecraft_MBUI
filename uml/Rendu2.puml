@@ -23,10 +23,15 @@ package model {
     class Game{
         -_playerTurn : Integer
         <<Create>> Game()
-        +StartGame()
+        +startGame()
+        +initGameboard()
+        +distributePlayersGoals()
         +nextPlayer()
         +movePlayer(posX, posY)
         +moveTilesLine()
+        +addObserver()
+        +notifyUpdateGameBoard()
+        +notifyUpdatePlayer()
     }
 
     class Player {
@@ -180,5 +185,6 @@ GameWindow "1" *-up-> "1\n- controller" GameController : > send user requests
 EndingWindow "1" *-up-> "1\n- controller" GameController : > send user requests
 
 Game "*" o-right-> "*\n- _observers" "GameObserver" : > observe
+Game "24" *-right-> "*\n- _valableGoals" "<<enumeration>> \n Entity" : > observe
 
 @enduml
