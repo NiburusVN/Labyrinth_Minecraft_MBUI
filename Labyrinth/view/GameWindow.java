@@ -22,7 +22,7 @@ public class GameWindow implements GameObserver {
     }
 
     @Override
-    public void updateGameStatus() {
+    public void updateGameEnded() {
 
     }
 }

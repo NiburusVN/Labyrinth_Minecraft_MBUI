@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class TileTemplate {
-    private static Random rand = new Random();
+    private static final Random rand = new Random();
     protected Direction _orientation;
     protected List<Boolean> _entries;
     protected Entity _entity = null; //default
 
 
     public TileTemplate() {
-        Integer r = rand.nextInt(4);
+        int r = rand.nextInt(4);
         switch (r) {
             case 0 -> this.setOrientation(Direction.North);
             case 1 -> this.setOrientation(Direction.East);

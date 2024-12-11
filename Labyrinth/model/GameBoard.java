@@ -7,7 +7,6 @@ import java.util.Random;
 public class GameBoard {
     private List<List<TileTemplate>> _boardTiles;
     private TileTemplate _extraTile;
-    private ArrayList<GameObserver> _observers;
 
     public GameBoard() {
         this._boardTiles = new ArrayList<>(7);
@@ -16,8 +15,6 @@ public class GameBoard {
         }
 
         this._extraTile = null;
-
-        this._observers = new ArrayList<GameObserver>();
     }
 
     public void init_board(TileFactory tileFactory){
