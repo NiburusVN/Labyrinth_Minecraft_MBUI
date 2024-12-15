@@ -7,5 +7,5 @@ public interface GameObserver {
 
     abstract void updateGoalsDeck();
 
-    abstract void updateGameStatus();
+    abstract void updateGameEnded();
 }

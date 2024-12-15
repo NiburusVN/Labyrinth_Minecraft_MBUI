@@ -1,17 +1,18 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public abstract class TileTemplate {
-    private static Random rand = new Random();
+    private static final Random rand = new Random();
     protected Direction _orientation;
     protected List<Boolean> _entries;
     protected Entity _entity = null; //default
 
 
     public TileTemplate() {
-        Integer r = rand.nextInt(4);
+        int r = rand.nextInt(4);
         switch (r) {
             case 0 -> this.setOrientation(Direction.North);
             case 1 -> this.setOrientation(Direction.East);
@@ -24,7 +25,9 @@ public abstract class TileTemplate {
         this.setOrientation(orientation);
     }
 
-    public abstract void setOrientation(Direction orientation);
+    public void setOrientation(Direction orientation){
+        this._orientation = orientation;
+    }
 
     public Direction getOrientation(){
         return this._orientation;
@@ -38,9 +41,6 @@ public abstract class TileTemplate {
         return this._entity;
     }
 
-    public void setEntries(List<Boolean> entries){
-        this._entries.clear();
-        this._entries.addAll(entries);
-    }
+    public abstract List<Boolean> getEntries();
 
 }
