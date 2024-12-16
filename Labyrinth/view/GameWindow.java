@@ -41,11 +41,11 @@ public class GameWindow extends JFrame implements GameObserver {
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 0;
         constraints.gridy = 0;
-        panel.add( button1, constraints );
+        Panel.add( button1, constraints );
         constraints.gridx = 1;
-        panel.add( button2, constraints );
+        Panel.add( button2, constraints );
         constraints.gridx = 2;
-        panel.add( button3, constraints );
+        Panel.add( button3, constraints );
 
         setVisible(true);
 

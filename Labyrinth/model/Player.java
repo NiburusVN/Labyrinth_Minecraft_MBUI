@@ -26,6 +26,8 @@ public class Player {
         this._goalsDeck.removeFirst();
     }
 
+    public Entity getCurrentGoal(){return this._goalsDeck.getFirst();}
+
     public Integer getPosX(){
         return this._posX;
     }

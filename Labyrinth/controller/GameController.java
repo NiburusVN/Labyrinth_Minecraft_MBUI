@@ -23,6 +23,8 @@ public class GameController {
     }
 
     public void validatePlayerPosition(){
+        this._game.checkWinner();
+        this._game.checkGoal();
         this._game.nextPlayer();
     }
 
