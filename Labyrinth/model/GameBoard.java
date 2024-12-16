@@ -42,16 +42,16 @@ public class GameBoard {
 
                     if (y % 2 == 0 && x % 2 == 0) { //si paire-paire → intersection
                         if(y == 0) //si sur le bord gauche
-                            this._boardTiles.get(y).set(x, tileFactory.createStartingTile(Direction.North));
+                            this._boardTiles.get(y).set(x, tileFactory.createIntersection(Direction.North));
 
                         else if(y == 6) //si sur le bord droit
-                            this._boardTiles.get(y).set(x, tileFactory.createStartingTile(Direction.South));
+                            this._boardTiles.get(y).set(x, tileFactory.createIntersection(Direction.South));
 
                         else if(x == 0) //si sur le bord haut
-                            this._boardTiles.get(y).set(x, tileFactory.createStartingTile(Direction.East));
+                            this._boardTiles.get(y).set(x, tileFactory.createIntersection(Direction.East));
 
                         else if(x == 6) //si sur le bord bas
-                            this._boardTiles.get(y).set(x, tileFactory.createStartingTile(Direction.West));
+                            this._boardTiles.get(y).set(x, tileFactory.createIntersection(Direction.West));
 
                         else //si au milieu (direction aléatoire)
                             this._boardTiles.get(y).set(x, tileFactory.createIntersection());
