@@ -22,7 +22,7 @@ public class Player {
         this._goalsDeck.add(goal);
     }
 
-    public void removeActualGoal(){
+    public void removeCurrentGoal(){
         this._goalsDeck.removeFirst();
     }
 

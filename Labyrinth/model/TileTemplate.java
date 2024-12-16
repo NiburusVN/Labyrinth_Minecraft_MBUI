@@ -37,6 +37,10 @@ public abstract class TileTemplate {
         this._entity = entity;
     }
 
+    public void removeEntity(Entity entity){
+        this._entity = null;
+    }
+
     public Entity getEntity(){
         return this._entity;
     }

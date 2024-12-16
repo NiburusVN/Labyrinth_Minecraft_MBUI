@@ -1,11 +1,16 @@
 package model;
 
-public interface GameObserver {
-    abstract void updateGameBoard();
+import java.util.ArrayList;
 
-    abstract void updatePlayerPosition();
+public interface GameObserver {
+    abstract void updateInitGameBoard(ArrayList<TileTemplate> _gameBoardTiles);
+
+    abstract void updatePlayerPosition(Integer posX, Integer posY);
+
+    abstract void updateMoveTilesLine(Integer posX, Integer posY);
 
     abstract void updateGoalsDeck();
 
     abstract void updateGameEnded();
+
 }
