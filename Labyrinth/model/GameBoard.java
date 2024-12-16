@@ -97,6 +97,9 @@ public class GameBoard {
     /// InsertExtraTile est le décalage du terrain lors du placement de la 50e tuile
     /// posX et posY correspondent à l'entrée de la 50e tuile
     public void insertExtraTile(Integer posX, Integer posY){
+<<<<<<< HEAD
+
+=======
         TileTemplate oldTile;
         if(posY == 0){ //du haut vers le bas
             oldTile = this._boardTiles.get(6).get(posX); // récupération de la tuile de sortie
@@ -138,10 +141,15 @@ public class GameBoard {
             System.out.println("Erreur dans insertExtraTile ; les positions données sont invalides\n" +
                     "X = "+ posX + " et Y = " + posY + "\n");
         }
+>>>>>>> fe7251949edcdf4d32eb83327e1d43ffbd021457
     }
 
     public TileTemplate getExtraTile(){
         return this._extraTile;
+    }
+
+    public TileTemplate getSpecificTile(Integer posX, Integer posY){
+        return this._boardTiles.get(posY).get(posX);
     }
 
 }

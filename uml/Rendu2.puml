@@ -32,6 +32,7 @@ package model {
         +addObserver()
         +notifyUpdateGameBoard()
         +notifyUpdatePlayer()
+        +getCurrentPlayer(): Player
     }
 
     class Player {
@@ -131,6 +132,7 @@ package model {
         +init_board(tileFactory: TileFactory)
         +insertExtraTile(posX: Integer, posY: Integer)
         +getExtraTile(): TileTemplate
+        +getSpecificTile(): TileTemplate
     }
 
     interface GameObserver <<interface>> {
@@ -154,6 +156,13 @@ package view {
 package controller {
     class GameController {
         +<<Create>> GameController()
+        +movePlayerUp()
+        +movePlayerDown()
+        +movePlayerLeft()
+        +movePlayerRight()
+        +validatePlayerPosition()
+        +validatePuttingExtraTile()
+        +startNewGame
     }
 }
 
@@ -186,6 +195,6 @@ GameWindow "1" *-up-> "1\n- controller" GameController : > send user requests
 EndingWindow "1" *-up-> "1\n- controller" GameController : > send user requests
 
 Game "*" o-right-> "*\n- _observers" "GameObserver" : > observe
-Game "24" *-right-> "*\n- _valableGoals" "<<enumeration>> \n Entity" : > observe
-
+Game "24" *-right-> "*\n- _valableGoals" "<<enumeration>> \n Entity" : > contains
+Game "1" *-right-> "*\n- _tileFactory" "TileFactory" : > has
 @enduml
