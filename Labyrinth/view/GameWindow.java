@@ -67,7 +67,7 @@ public class GameWindow extends JFrame implements GameObserver {
     }
 
     @Override
-    public void updateGameStatus() {
+    public void updateGameEnded() {
 
     }
 }
