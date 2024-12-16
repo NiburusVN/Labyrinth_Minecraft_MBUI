@@ -76,13 +76,15 @@ public class GameBoard {
     }
 
     public void insertExtraTile(Integer posX, Integer posY){
-        TileTemplate oldTile = this._boardTiles.get(posY).get(posX);
-        this._boardTiles.get(posY).set(posX, this._extraTile);
-        this._extraTile = oldTile;
+
     }
 
     public TileTemplate getExtraTile(){
         return this._extraTile;
+    }
+
+    public TileTemplate getSpecificTile(Integer posX, Integer posY){
+        return this._boardTiles.get(posY).get(posX);
     }
 
 }
