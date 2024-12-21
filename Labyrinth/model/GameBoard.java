@@ -3,6 +3,8 @@ package model;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
+import java.util.random.*;
 
 
 public class GameBoard {
@@ -67,6 +69,30 @@ public class GameBoard {
                         this._boardTiles.get(y).set(x, tiles.getFirst());
                         tiles.removeFirst();
                     }
+                }
+            }
+        }
+    }
+
+    public void goals_distribution(List<Entity> entities){
+        Collections.shuffle(entities);
+        Random rand = new Random();
+        int val;
+        while(!entities.isEmpty()){
+            val = rand.nextInt(50);
+            if(val == 0 || val == 6 || val == 42 || val == 48){ //si c'est les coins
+                continue;
+            }
+            else if(val == 49){
+                if(this._extraTile.getEntity() == null){
+                    this._extraTile.setEntity(entities.getFirst());
+                    entities.removeFirst();
+                }
+            }
+            else{
+                if(this._boardTiles.get(val/7).get(val%7).getEntity() == null){ //y = val/7 ; x = val%7
+                    this._boardTiles.get(val/7).get(val%7).setEntity(entities.getFirst());
+                    entities.removeFirst();
                 }
             }
         }
