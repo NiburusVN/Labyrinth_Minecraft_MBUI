@@ -13,7 +13,7 @@ Notre projet comporte donc:
 
 Pour plus de détail sur les classes et leurs implémentations, il y a un dossier ***uml*** contenant l'uml à la fin du projet.
 -------
-Pour le design visuel, on décidé de se baser sur Minecraft où quatre entités entrent dans le labyrinth afin de chercher 6 trésors différents (les objectifs, qui sont eux aussi basé sur Minecraft).
+Pour le design visuel, on décidé de se baser sur Minecraft où quatre entités entrent dans une forteresse afin de chercher 6 trésors différents (les objectifs, qui sont eux aussi basé sur Minecraft).
 -------
 Par rapport au fonctionnement du projet, on aura un Main qui aura pour responsabilité:
 - créer les éléments nécessaires
