@@ -3,11 +3,15 @@ package model;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
+import java.util.random.*;
 
 
 public class GameBoard {
+
+    //attributs
     private List<List<TileTemplate>> _boardTiles;
-    private TileTemplate _extraTile;
+    private TileTemplate _extraTile; //la 50e tuile
 
     public GameBoard() {
         this._boardTiles = new ArrayList<>(7);
@@ -18,8 +22,13 @@ public class GameBoard {
         this._extraTile = null;
     }
 
+    /////////////////////////////////
+    /// INITIALISATION DU TERRAIN ///
+    /////////////////////////////////
+    //Fonction pour Générer les tuiles et remplir le terrain de façon aléatoire
     public void init_board(TileFactory tileFactory){
 
+        //Création d'une Liste pour stocker toutes les tuiles pour ensuite les redistribuer
         List<TileTemplate> tiles = new ArrayList<>(34);
 
         for(int i = 0; i<16; i++)
@@ -59,45 +68,45 @@ public class GameBoard {
                     else { // sinon autre
                         this._boardTiles.get(y).set(x, tiles.getFirst());
                         tiles.removeFirst();
-//                        int tileType = random.nextInt(3); // nombre random entre 0 et 2
-//                        if (tileType == 0 && movableCorners > 0) {
-//                            this._boardTiles.get(y).set(x, tileFactory.createCorner());
-//                            movableCorners--; //décrémentation du type disponible
-//                        }
-//
-//                        else if (tileType == 1 && movableHallways > 0) {
-//                            this._boardTiles.get(y).set(x, tileFactory.createHallway());
-//                            movableHallways--;
-//                        }
-//
-//                        else if (tileType == 2 && movableIntersections > 0) {
-//                            this._boardTiles.get(y).set(x, tileFactory.createIntersection());
-//                            movableIntersections--;
-//                        }
-//
-//                        else {
-//                        // Si jamais on peut plus faire en mode random, car il n'y en a aucune de disponible
-//                            if (movableCorners > 0) {
-//                                this._boardTiles.get(y).set(x, tileFactory.createCorner());
-//                                movableCorners--;
-//                            } else if (movableHallways > 0) {
-//                                this._boardTiles.get(y).set(x, tileFactory.createHallway());
-//                                movableHallways--;
-//                            } else if (movableIntersections > 0) {
-//                                this._boardTiles.get(y).set(x, tileFactory.createIntersection());
-//                                movableIntersections--;
-//                            }
-//                        }
                     }
                 }
             }
         }
     }
 
+    public void goals_distribution(List<Entity> entities){
+        Collections.shuffle(entities);
+        Random rand = new Random();
+        int val;
+        while(!entities.isEmpty()){
+            val = rand.nextInt(50);
+            if(val == 0 || val == 6 || val == 42 || val == 48){ //si c'est les coins
+                continue;
+            }
+            else if(val == 49){
+                if(this._extraTile.getEntity() == null){
+                    this._extraTile.setEntity(entities.getFirst());
+                    entities.removeFirst();
+                }
+            }
+            else{
+                if(this._boardTiles.get(val/7).get(val%7).getEntity() == null){ //y = val/7 ; x = val%7
+                    this._boardTiles.get(val/7).get(val%7).setEntity(entities.getFirst());
+                    entities.removeFirst();
+                }
+            }
+        }
+    }
+
+    //////////////////////////////
+    /// DEPLACEMENT DE TERRAIN ///
+    //////////////////////////////
+
     /// InsertExtraTile est le décalage du terrain lors du placement de la 50e tuile
     /// posX et posY correspondent à l'entrée de la 50e tuile
+    /// On peut savoir dans quel axe va bouger le terrain via la valeur de X ou Y
     public void insertExtraTile(Integer posX, Integer posY){
-        TileTemplate oldTile;
+        TileTemplate oldTile; //variable local
         if(posY == 0){ //du haut vers le bas
             oldTile = this._boardTiles.get(6).get(posX); // récupération de la tuile de sortie
 
@@ -140,6 +149,7 @@ public class GameBoard {
         }
     }
 
+    /// GETs ///
     public TileTemplate getExtraTile(){
         return this._extraTile;
     }
