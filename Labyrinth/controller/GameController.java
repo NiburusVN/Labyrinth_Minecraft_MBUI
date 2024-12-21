@@ -9,6 +9,9 @@ public class GameController {
 
     public GameController(Game game) {this._game = game;}
 
+    //initialisation d'un partie de Labyrinth
+    public void play() {_game.startGame();}
+
     /////////////////////////
     /// ACTIONS DU JOUEUR ///
     /////////////////////////
@@ -36,18 +39,5 @@ public class GameController {
     }
     public void movePlayerLeft(){
         this._game.movePlayer(-1, 0);
-    }
-
-    ///////////////////////////////////////
-    /// VERIFICATION D'OBJECTIF ATTEINT ///
-    ///////////////////////////////////////
-    public void validatePlayerPosition(){
-        this._game.checkWinner();
-        this._game.checkGoal();
-        this._game.nextPlayer();
-    }
-
-    public void validatePuttingExtraTile(Integer posX, Integer posY){
-        this._game.moveTilesLine(posX, posY);
     }
 }

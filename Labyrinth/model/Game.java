@@ -35,6 +35,7 @@ public class Game{
         this.initGameBoard();//terrain
         this.initGoals();//objectifs sur terrain
         this.distributePlayersGoals();//objectifs des joueurs
+        this.notifyAll();
     }
 
     //fonction qui crée les tuiles pour le terrain
@@ -65,7 +66,10 @@ public class Game{
     /////////////////////////////////
     //fonction pour passer au tour du joueur suivant
     public void nextPlayer(){
+        this.checkWinner();
+        this.checkGoal();
         this._playerTurn = (this._playerTurn + 1) % 4;
+        //notify?
     }
 
     //fonction qui return le joueur qui fait son tour
@@ -109,15 +113,6 @@ public class Game{
                     this.getCurrentPlayer().moveTo(X, Y + 1);
                 }
             }
-//            //Si déplacement à gauche|droite|haut|bas de la case du joueur actuel et que l'entrée est accessible:
-//            if ((posX == -1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX() - 1, this.getCurrentPlayer().getPosY()).getEntries().get(2)) ||
-//                    (posX == 1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX() + 1, this.getCurrentPlayer().getPosY()).getEntries().get(0)) ||
-//                    (posY == -1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX(), this.getCurrentPlayer().getPosY() - 1).getEntries().get(3)) ||
-//                    (posY == 1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX(), this.getCurrentPlayer().getPosY() + 1).getEntries().get(1))) {
-//                Integer PlayerNextPosX = this.getCurrentPlayer().getPosX() + posX;
-//                Integer PlayerNextPosY = this.getCurrentPlayer().getPosY() + posY;
-//                this.getCurrentPlayer().moveTo(PlayerNextPosX, PlayerNextPosY);
-
             else {
                 System.out.println("Tuile non accessible !\n");
             }
