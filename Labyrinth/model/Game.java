@@ -51,9 +51,29 @@ public class Game {
 
     //display peut tranmettre un évent au controller avec ce qu'il veut dedans
     public void movePlayer(Integer posX, Integer posY){
-        if(this.getCurrentPlayer().getPosX() + posX >= 0 && this.getCurrentPlayer().getPosX() + posX <= 6 && this.getCurrentPlayer().getPosY() + posY >= 0 && this.getCurrentPlayer().getPosY() + posY <= 6) {
+        if(this.getCurrentPlayer().getPosX() + posX >= 0
+                && this.getCurrentPlayer().getPosX() + posX <= 6
+                && this.getCurrentPlayer().getPosY() + posY >= 0
+                && this.getCurrentPlayer().getPosY() + posY <= 6) {//vérification d'un déplacement légal
+
+            Integer X = this.getCurrentPlayer().getPosX();
+            Integer Y = this.getCurrentPlayer().getPosY();
+
+            //0 ouest ; 1 nord ; 2 est ; 3 sud
+            if(posX == -1){ // Ouest
+                if(this._gameBoard.getSpecificTile(X,Y).getEntries().get(0) //si notre case permet le déplacement
+                        && this._gameBoard.getSpecificTile(X - 1,Y).getEntries().get(2)){ // si la case cible permet le déplacement
+                    this.getCurrentPlayer().moveTo(X-1, Y);
+                }
+            }
+            if(posX == 1){
+
+            }
             //Si déplacement à gauche|droite|haut|bas de la case du joueur actuel et que l'entrée est accessible:
-            if ((posX == -1 && posY == 0 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX() - 1, this.getCurrentPlayer().getPosY()).getEntries().get(2)) || (posX == 1 && posY == 0 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX() + 1, this.getCurrentPlayer().getPosY()).getEntries().get(0)) || (posX == 0 && posY == -1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX(), this.getCurrentPlayer().getPosY() - 1).getEntries().get(3)) || (posX == 0 && posY == 1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX(), this.getCurrentPlayer().getPosY() + 1).getEntries().get(1))) {
+            if ((posX == -1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX() - 1, this.getCurrentPlayer().getPosY()).getEntries().get(2)) ||
+                    (posX == 1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX() + 1, this.getCurrentPlayer().getPosY()).getEntries().get(0)) ||
+                    (posY == -1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX(), this.getCurrentPlayer().getPosY() - 1).getEntries().get(3)) ||
+                    (posY == 1 && this._gameBoard.getSpecificTile(this.getCurrentPlayer().getPosX(), this.getCurrentPlayer().getPosY() + 1).getEntries().get(1))) {
                 Integer PlayerNextPosX = this.getCurrentPlayer().getPosX() + posX;
                 Integer PlayerNextPosY = this.getCurrentPlayer().getPosY() + posY;
                 this.getCurrentPlayer().moveTo(PlayerNextPosX, PlayerNextPosY);
