@@ -4,8 +4,16 @@ import model.GameObserver;
 import model.TileTemplate;
 
 import javax.swing.*; //peut-être spécifier seulement les composants utilisés
-import java.awt.*;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import java.awt.Graphics2D;
+import java.awt.AlphaComposite;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+
 
 public class GameWindow extends JFrame implements GameObserver {
     public GameWindow(GameController controller) {
@@ -16,7 +24,7 @@ public class GameWindow extends JFrame implements GameObserver {
         JPanel BoardPanel = new JPanel();
         BoardPanel.setLayout( new GridLayout(7, 7) );
 
-        ImageIcon tuileAngle = new ImageIcon("/img/exempleTuiles/tuile_angle.png");
+        BufferedImage tuileAngle = new ImageIO.read("/img/exempleTuiles/tuile_angle.png");
         ImageIcon tuileLine = new ImageIcon("/img/exempleTuiles/tuile_line.png");
         ImageIcon tuileIntersection = new ImageIcon("/img/exempleTuiles/tuile_T.png");
 
