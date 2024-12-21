@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Game {
+public class Game{
+//    public class Game {
 
     //Attributs
     private Integer _playerTurn;
@@ -84,28 +85,28 @@ public class Game {
             Integer Y = this.getCurrentPlayer().getPosY();
 
             //0 ouest ; 1 nord ; 2 est ; 3 sud
-            if(posX == -1){ // déplacemenet vers Ouest
-                if(this._gameBoard.getSpecificTile(X, Y).getEntries().get(0) //si notre case permet le déplacement
-                        && this._gameBoard.getSpecificTile(X-1, Y).getEntries().get(2)){ // si la case cible permet le déplacement
-                    this.getCurrentPlayer().moveTo(X-1, Y);
+            if (posX == -1) { // déplacemenet vers Ouest
+                if (this._gameBoard.getSpecificTile(X, Y).getEntries().get(0) //si notre case permet le déplacement
+                        && this._gameBoard.getSpecificTile(X - 1, Y).getEntries().get(2)) { // si la case cible permet le déplacement
+                    this.getCurrentPlayer().moveTo(X - 1, Y);
                 }
             }
-            if(posX == 1){ // déplacement vers Est
-                if(this._gameBoard.getSpecificTile(X, Y).getEntries().get(2) //si notre case permet le déplacement
-                        && this._gameBoard.getSpecificTile(X+1, Y).getEntries().get(0)){ // si la case cible permet le déplacement
-                    this.getCurrentPlayer().moveTo(X+1, Y);
+            if (posX == 1) { // déplacement vers Est
+                if (this._gameBoard.getSpecificTile(X, Y).getEntries().get(2) //si notre case permet le déplacement
+                        && this._gameBoard.getSpecificTile(X + 1, Y).getEntries().get(0)) { // si la case cible permet le déplacement
+                    this.getCurrentPlayer().moveTo(X + 1, Y);
                 }
             }
-            if(posX == -1){ // déplacement vers Nord
-                if(this._gameBoard.getSpecificTile(X, Y).getEntries().get(1) //si notre case permet le déplacement
-                        && this._gameBoard.getSpecificTile(X, Y-1).getEntries().get(3)){ // si la case cible permet le déplacement
-                    this.getCurrentPlayer().moveTo(X, Y-1);
+            if (posX == -1) { // déplacement vers Nord
+                if (this._gameBoard.getSpecificTile(X, Y).getEntries().get(1) //si notre case permet le déplacement
+                        && this._gameBoard.getSpecificTile(X, Y - 1).getEntries().get(3)) { // si la case cible permet le déplacement
+                    this.getCurrentPlayer().moveTo(X, Y - 1);
                 }
             }
-            if(posX == -1){ // déplacement vers le Sud
-                if(this._gameBoard.getSpecificTile(X, Y).getEntries().get(3) //si notre case permet le déplacement
-                        && this._gameBoard.getSpecificTile(X, Y+1).getEntries().get(1)){ // si la case cible permet le déplacement
-                    this.getCurrentPlayer().moveTo(X, Y+1);
+            if (posX == -1) { // déplacement vers le Sud
+                if (this._gameBoard.getSpecificTile(X, Y).getEntries().get(3) //si notre case permet le déplacement
+                        && this._gameBoard.getSpecificTile(X, Y + 1).getEntries().get(1)) { // si la case cible permet le déplacement
+                    this.getCurrentPlayer().moveTo(X, Y + 1);
                 }
             }
 //            //Si déplacement à gauche|droite|haut|bas de la case du joueur actuel et que l'entrée est accessible:
@@ -116,11 +117,12 @@ public class Game {
 //                Integer PlayerNextPosX = this.getCurrentPlayer().getPosX() + posX;
 //                Integer PlayerNextPosY = this.getCurrentPlayer().getPosY() + posY;
 //                this.getCurrentPlayer().moveTo(PlayerNextPosX, PlayerNextPosY);
-            }
+
             else {
                 System.out.println("Tuile non accessible !\n");
             }
         }
+
         else{
             System.out.println("Vous allez sortir du plateau à force continuer comme ça !\n");
         }
@@ -168,9 +170,12 @@ public class Game {
             }
         }
         // Mise à jour de la vue (éviter la redondance dans chaque if-else du code)
-        this.notifyUpdatePlayerPosition(this._players);
+        this.notifyUpdatePlayerPosition(1,2);
     }
 
+    //////////////////////////////////
+    /// FONCTIONS DE VERIFICATIONS ///
+    //////////////////////////////////
     public void checkGoal(){
         if(getCurrentPlayer().getCurrentGoal() == this._gameBoard.getSpecificTile(getCurrentPlayer().getPosX(), getCurrentPlayer().getPosY()).getEntity()){
             getCurrentPlayer().removeCurrentGoal();
