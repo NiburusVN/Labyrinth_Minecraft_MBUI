@@ -163,7 +163,7 @@ package controller {
         +movePlayerRight()
         +validatePlayerPosition()
         +validatePuttingExtraTile(posX: Integer, posY: Integer)
-        +startNewGame
+        +startNewGame()
     }
 }
 
