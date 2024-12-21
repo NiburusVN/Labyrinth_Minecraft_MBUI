@@ -5,15 +5,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Corner extends TileTemplate {
+
     public Corner() {
         super();
     }
 
+    //surcharge du constructeur (niveau 1 des tuiles: on choisi l'orientation)
     public Corner(Direction orientation) {
         super(orientation);
     }
 
     @Override
+    //Fonction pour vérifier la validité des déplacements
     public ArrayList<Boolean> getEntries() {
         // 1er indice : Ouest, 2ème indice : Nord, 3ème indice: Est, 4ème indice: Sud
         ArrayList<Boolean> entries = new ArrayList<Boolean>();

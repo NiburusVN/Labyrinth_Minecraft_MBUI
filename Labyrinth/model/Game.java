@@ -6,6 +6,7 @@ import java.util.Collections;
 
 public class Game {
 
+    //Attributs
     private Integer _playerTurn;
     private ArrayList<Entity> _valableGoals;
     private ArrayList<Player> _players;
@@ -14,6 +15,7 @@ public class Game {
     private TileFactory _tileFactory;
     private ArrayList<GameObserver> _observers;
 
+    //constructeur
     public Game(){
         this._playerTurn = 0;
         this._valableGoals = new ArrayList<>( Arrays.asList(Entity.values()) );
@@ -23,14 +25,21 @@ public class Game {
         this._tileFactory = new TileFactory();
     }
 
+    //////////////////////////////////
+    /// FONCTIONS D'INITIALISATION ///
+    //////////////////////////////////
+    //fonction init pour commencer un jeu
     public void startGame(){
         this.initGameBoard();
+        this.distributePlayersGoals();
     }
 
+    //fonction qui crée les tuiles pour le terrain
     public void initGameBoard(){
         this._gameBoard.init_board(this._tileFactory);
     }
 
+    //fonction pour assigner les objectifs aux joueurs
     public void distributePlayersGoals(){
         for (Player player : this._players){
             Collections.shuffle(this._valableGoals);
@@ -41,10 +50,25 @@ public class Game {
         }
     }
 
+    //ajout d'un oberver
+    public void addObserver(GameObserver observer){
+        this._observers.add(observer);
+    }
+
+    /////////////////////////////////
+    /// FONCTIONS SUR LES JOUEURS ///
+    /////////////////////////////////
+    //fonction pour passer au tour du joueur suivant
     public void nextPlayer(){
         this._playerTurn = (this._playerTurn + 1) % 4;
     }
 
+    //fonction qui return le joueur qui fait son tour
+    public Player getCurrentPlayer(){
+        return this._players.get(this._playerTurn);
+    }
+
+    //fonction sur le déplacement du joueur
     //display peut tranmettre un évent au controller avec ce qu'il veut dedans
     public void movePlayer(Integer posX, Integer posY){
 
@@ -56,63 +80,69 @@ public class Game {
                 Integer PlayerNextPosY = this.getCurrentPlayer().getPosY() + posY;
                 this.getCurrentPlayer().moveTo(PlayerNextPosX, PlayerNextPosY);
             }
-
             else {
                 System.out.println("Tuile non accessible !\n");
             }
-
         }
-
         else{
             System.out.println("Vous allez sortir du plateau à force continuer comme ça !\n");
         }
-
     }
 
+    ////////////////////////////////
+    /// FONCTIONS SUR LE TERRAIN ///
+    ////////////////////////////////
     public void moveTilesLine(Integer posX, Integer posY){
+        //déplacement des tuiles du labyrinth
         this._gameBoard.insertExtraTile(posX, posY);
 
-        if(posX == 0){
-            for(Player player: this._players){
-                if(player.getPosY() == posY && player.getPosY() != 6){
+        //Déplacement des joueurs sur la ligne décalé + vérification d'éjection en dehors du terrain
+        if(posX == 0){ //si déplacement de gauche vers droite
+            for(Player player: this._players){//pour tous les joueurs
+                if(player.getPosY() == posY && player.getPosX() != 6){ //si le joueur est déplacé et qu'il N'EST PAS au bout à droite
                     player.moveTo(this.getCurrentPlayer().getPosX() + 1, this.getCurrentPlayer().getPosY());
                 }
-
-                // Si le joueur est à la dernière case, il retourne à la première case
-                else{
+                else{//le joueur est à la dernière case, il retourne à la première case
                     player.moveTo(0, this.getCurrentPlayer().getPosY());
                 }
-
-                this.notifyUpdatePlayerPosition(player.getPosX(), player.getPosY());
+            }
+        } else if (posX == 6) { //si le déplacement est de droite vers la gauche
+            for(Player player: this._players){//pour tous les joueurs
+                if(player.getPosY() == posY && player.getPosX() != 0){ //si le joueur est déplacé et qu'il N'EST PAS au bout à gauche
+                    player.moveTo(this.getCurrentPlayer().getPosX() - 1, this.getCurrentPlayer().getPosY());
+                }
+                else{//le joueur est à la première case, il retourne à la dernière case
+                    player.moveTo(6, this.getCurrentPlayer().getPosY());
+                }
             }
         }
-
-        // Sinon si posY de la tuile supplémentaire est à 0
-        else{
-            for(Player player: this._players){
-                if(player.getPosX() == posX && player.getPosY() != 6){
+        else if(posY == 0) {//si le déplacement de haut vers le bas
+            for (Player player : this._players) {//pour tous les joueurs
+                if (player.getPosX() == posX && player.getPosX() != 6) { //si le joueur est déplacé et qu'il N'EST PAS tout en bas
                     player.moveTo(this.getCurrentPlayer().getPosX(), this.getCurrentPlayer().getPosY() + 1);
                 }
-
-                // Si le joueur est à la dernière case, il retourne à la première case
-                else{
+                else {//le joueur est tout en bas, il retourne tout en haut
                     player.moveTo(this.getCurrentPlayer().getPosX(), 0);
                 }
-
-                this.notifyUpdatePlayerPosition(player.getPosX(), player.getPosY());
+            }
+        } else if (posY == 6) {//si le déplacement est de bas vers le haut
+            for (Player player : this._players) {//pour tous les joueurs
+                if (player.getPosX() == posX && player.getPosX() != 0) { //si le joueur est déplacé et qu'il N'EST PAS tout en haut
+                    player.moveTo(this.getCurrentPlayer().getPosX(), this.getCurrentPlayer().getPosY() + 1);
+                }
+                else {//le joueur est tout en haut, il retourne tout en bas
+                    player.moveTo(this.getCurrentPlayer().getPosX(), 6);
+                }
             }
         }
 
+        // Mise à jour de la vue (éviter la redondance dans chaque if-else du code)
+        this.notifyUpdatePlayerPosition(this._players);
     }
 
-    public Player getCurrentPlayer(){
-        return this._players.get(this._playerTurn);
-    }
-
-    public void addObserver(GameObserver observer){
-        this._observers.add(observer);
-    }
-
+    ///////////////////////////
+    /// FONCTIONS DE NOTIFY ///
+    ///////////////////////////
     public void notifyUpdateInitGameBoard(ArrayList<TileTemplate> gameBoardTiles){
         for(GameObserver observer: this._observers){
             observer.updateInitGameBoard(gameBoardTiles);
@@ -130,7 +160,4 @@ public class Game {
             observer.updatePlayerPosition(posX, posY);
         }
     }
-
-
-
 }
