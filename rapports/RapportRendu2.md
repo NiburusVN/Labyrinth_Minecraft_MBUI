@@ -26,6 +26,7 @@ Notre projet suit une architecture **MVC** et comporte donc:
     - classe **GameController**
 + Des *views*: (aussi qu'une seule vue)
     - classe **GameWindow** ; elle hérite de l'interface **GameObserver**
+    - classe **StartingWindow** 
 
 Il y a aussi un `Main.java` qui permet compiler le projet dans son intégralité.
 
@@ -125,6 +126,13 @@ Par rapport au premier rendu, on a ajouté l'attribut `_blockedInsert` qui retie
     + rotation
     + déplacement
 - plus de `notify`
+
+## Les **vues**
+
+Notre vue principale est l'observer **GameWindow**. Afin de commencer à tout initialiser, on a créé la classe **StartingWindow**.
+**GameWindow** s'occupe de gérer les images à afficher pour l'utilisateur.
+
+On a voulu faire une classe **EndingWindow** dans le rapport précédent, mais on l'a finalement fait directement dans **GameWindow**
 
 
 ## Edit de dernière minute:
