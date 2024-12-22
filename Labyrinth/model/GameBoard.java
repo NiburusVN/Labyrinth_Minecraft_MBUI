@@ -1,5 +1,6 @@
 package model;
 
+import javax.swing.text.Position;
 import java.util.*;
 
 
@@ -144,87 +145,45 @@ public class GameBoard {
             this._extraTilePosition = new Integer[] {position[0], 0};
         }
 
-        else{
-            System.out.println("Erreur dans insertExtraTile ; les positions données sont invalides\n" +
-                    "X = "+ position[0] + " et Y = " + position[1] + "\n");
-            //notifyMessage
-        }
         return this._extraTilePosition;
     }
 
     //déplace la 50e pièce ; true → dans le sens des aiguilles d'une montre, sinon l'autre sens
-    public void moveExtraTile(Boolean clockwise){
-        if(clockwise){ // Sens des aiguilles d'une montre.
-            //Il faut savoir sur quel bord est la 50e pièce
-            if(this._extraTilePosition[0] == 0) { //sur le bord en haut
-                if(this._extraTilePosition[1]== 6){ //au bout → change de bord
-                    this._extraTilePosition = new Integer[] {2,8};
-                }
-                else{ //reste sur le même bord
-                    this._extraTilePosition[1] += 2;
-                }
-            }
-            else if(this._extraTilePosition[0] == 8) { //sur le bord en bas
-                if(this._extraTilePosition[1]== 2){ //au bout → change de bord
-                    this._extraTilePosition = new Integer[] {6,0};
-                }
-                else{ //reste sur le même bord
-                    this._extraTilePosition[1] -= 2;
-                }
-            }
-            else if(this._extraTilePosition[1] == 0){ //sur le bord à gauche
-                if(this._extraTilePosition[0] == 2){ //au bout → change de bord
-                    this._extraTilePosition = new Integer[] {0,2};
-                }
-                else { //reste sur le même bord
-                    this._extraTilePosition[0] -= 2;
-                }
-            }
-            else if(this._extraTilePosition[1] == 8){ //sur le bord à gauche
-                if(this._extraTilePosition[0] == 6){ //au bout → change de bord
-                    this._extraTilePosition = new Integer[] {8,6};
-                }
-                else { //reste sur le même bord
-                    this._extraTilePosition[0] += 2;
-                }
+
+    public void moveExtraTile(boolean clockwise) {
+        // Liste des positions possibles dans l'ordre, sans les coins
+        Integer[][] path = {
+                {0, 2}, {0, 4}, {0, 6}, {2, 8}, {4, 8}, {6, 8},
+                {8, 6}, {8, 4}, {8, 2}, {6, 0}, {4, 0}, {2, 0}
+        };
+
+        // Trouver l'index actuel de la position de la tuile
+        int currentIndex = -1;
+        for (int i = 0; i < path.length; i++) {
+            if (_extraTilePosition[0].equals(path[i][0]) && _extraTilePosition[1].equals(path[i][1])) {
+                currentIndex = i;
+                break;
             }
         }
-        else{
-            //Il faut savoir sur quel bord est la 50e pièce
-            if(this._extraTilePosition[0] == 0) { //sur le bord en haut
-                if(this._extraTilePosition[1]== 2){ //au bout → change de bord
-                    this._extraTilePosition = new Integer[] {2,0};
-                }
-                else{ //reste sur le même bord
-                    this._extraTilePosition[1] -= 2;
-                }
-            }
-            else if(this._extraTilePosition[0] == 8) { //sur le bord en bas
-                if(this._extraTilePosition[1]== 6){ //au bout → change de bord
-                    this._extraTilePosition = new Integer[] {6,8};
-                }
-                else{ //reste sur le même bord
-                    this._extraTilePosition[1] += 2;
-                }
-            }
-            else if(this._extraTilePosition[1] == 0){ //sur le bord à gauche
-                if(this._extraTilePosition[0] == 6){ //au bout → change de bord
-                    this._extraTilePosition = new Integer[] {8,2};
-                }
-                else { //reste sur le même bord
-                    this._extraTilePosition[0] += 2;
-                }
-            }
-            else if(this._extraTilePosition[1] == 8){ //sur le bord à gauche
-                if(this._extraTilePosition[0] == 2){ //au bout → change de bord
-                    this._extraTilePosition = new Integer[] {0,6};
-                }
-                else { //reste sur le même bord
-                    this._extraTilePosition[0] -= 2;
-                }
-            }
+
+        // Si la position actuelle est introuvable, on sort
+        if (currentIndex == -1) {
+            throw new IllegalStateException("La position de la tuile extra est invalide !");
         }
+
+        // Calculer le nouvel index selon la direction
+        int newIndex;
+        if (clockwise) {
+            newIndex = (currentIndex + 1) % path.length; // Avancer dans le sens horaire
+        } else {
+            newIndex = (currentIndex - 1 + path.length) % path.length; // Reculer dans le sens anti-horaire
+        }
+
+        // Mettre à jour la position de la tuile extra
+        _extraTilePosition = path[newIndex];
     }
+
+
 
     //tourne la 50e pièce ; true → dans le sens des aiguilles d'une montre, sinon l'autre sens.
     public void rotateExtraTile(Boolean clockwise){

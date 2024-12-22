@@ -36,7 +36,6 @@ public class Game{
     public void startGame() throws IOException {
         this.initGameBoard();//terrain
         this.initGoals();//objectifs sur terrain
-        printGameBoard(this._gameBoard.getGameBoardTiles());
         this.notifyUpdateInitGameBoard(this._gameBoard.getGameBoardTiles());
 
         this.distributePlayersGoals();//objectifs des joueurs
@@ -167,22 +166,16 @@ public class Game{
                     this.notifyUpdatePlayerPosition(this._playerTurn, posJoueur, posTuile, this._gameBoard.getSpecificTile(posJoueur), this._gameBoard.getSpecificTile(posTuile), this._players);
                 }
             }
-            else{
-                System.out.println("Tuile non accessible !\n");
-                //notifyMessage
-            }
         }
-        else{
-            System.out.println("Vous allez sortir du plateau à force continuer comme ça !\n");
-            //notifyMessage
-        }
+
+        this.checkGoal();
     }
 
     ////////////////////////////////
     /// FONCTIONS SUR LE TERRAIN ///
     ////////////////////////////////
-    public void moveTilesLine(Integer[] insertPos) throws IOException {
-
+    public void moveTilesLine() throws IOException {
+        Integer[] insertPos = this._gameBoard.getExtraTilePosition();
         if(this._blockedInsert == insertPos){
             //notifyMessage
         }
@@ -291,7 +284,11 @@ public class Game{
         this.notifyUpdateRotateExtraTile(this._gameBoard.getExtraTile().getOrientation(), this._gameBoard.getExtraTilePosition());
     }
 
-    public void moveExtraTile(Boolean clockwise){this._gameBoard.moveExtraTile(clockwise);}
+    public void moveExtraTile(Boolean clockwise){
+        Integer[] oldPosExtraTile = this._gameBoard.getExtraTilePosition();
+        this._gameBoard.moveExtraTile(clockwise);
+        this.notifyUpdateMoveExtraTile(this._gameBoard.getExtraTilePosition(), oldPosExtraTile);
+    }
     //////////////////////////////////
     /// FONCTIONS DE VERIFICATIONS ///
     //////////////////////////////////
@@ -299,6 +296,7 @@ public class Game{
         if(getCurrentPlayer().getCurrentGoal() == this._gameBoard.getSpecificTile(getCurrentPlayer().getPosition()).getEntity()){
             getCurrentPlayer().removeCurrentGoal();
             //notifyGoal
+            this.notifyUpdateGoalsDeck(this._playerTurn, this.getCurrentPlayer().getPosition());
         }
     }
 
@@ -357,23 +355,21 @@ public class Game{
         }
     }
 
-    public void notifyUpdateMoveExtraTile(Integer posX, Integer posY){
+    public void notifyUpdateMoveExtraTile(Integer[] newPosExtraTile, Integer[] oldPosExtraTile){
         for(GameObserver observer: this._observers){
-            observer.updateMoveExtraTile(posX, posY);
+            observer.updateMoveExtraTile(newPosExtraTile, oldPosExtraTile);
         }
     }
 
-    public void printGameBoard(List<List<TileTemplate>> gameBoardTiles) {
-        for (int y = 0; y < gameBoardTiles.size(); y++) {
-            for (int x = 0; x < gameBoardTiles.get(y).size(); x++) {
-                TileTemplate tile = gameBoardTiles.get(y).get(x);
-                if (tile != null) {
-                    System.out.print(tile.getType() + "\t"); // Affiche le type de la tuile
-                } else {
-                    System.out.print("X\t"); // Affiche X si la case est null
-                }
-            }
-            System.out.println(); // Nouvelle ligne pour la prochaine rangée
+    public void notifyUpdateGoalsDeck(Integer numCurrentPlayer, Integer[] posGoal){
+        for(GameObserver observer: this._observers) {
+            observer.updateGoalsDeck(numCurrentPlayer, posGoal);
+        }
+    }
+
+    public void notifyUpdateGameEnded(Integer numCurrentPlayer){
+        for(GameObserver observer: this._observers) {
+            observer.updateGameEnded(numCurrentPlayer);
         }
     }
 }

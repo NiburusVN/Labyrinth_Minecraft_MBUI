@@ -1,6 +1,7 @@
 package controller;
 
 import model.Game;
+import model.GameObserver;
 
 import java.io.IOException;
 
@@ -9,7 +10,7 @@ public class GameController {
     //attribut
     private Game _game;
 
-    public GameController(Game game) {this._game = game;}
+    public GameController() {this._game = new Game();}
 
     //initialisation d'un partie de Labyrinth
     public void play() throws IOException {_game.startGame();}
@@ -23,8 +24,8 @@ public class GameController {
     }
 
     //valider le sens de déplacement du labyrinth
-    public void validatePuttingExtraTile(Integer[] insertPos) throws IOException {
-        this._game.moveTilesLine(insertPos);
+    public void validatePuttingExtraTile() throws IOException {
+        this._game.moveTilesLine();
     }
 
     /////////////////////////////
@@ -41,5 +42,17 @@ public class GameController {
     }
     public void movePlayerLeft() throws IOException {
         this._game.movePlayer(new Integer[] {-1,0});
+    }
+
+    public void rotateExtraTile(Boolean clockwise){
+        this._game.rotateExtraTile(clockwise);
+    }
+
+    public void moveExtraTile(Boolean clockwise){
+        this._game.moveExtraTile(clockwise);
+    }
+
+    public void addObserver(GameObserver gameObserver){
+        this._game.addObserver(gameObserver);
     }
 }

@@ -11,10 +11,12 @@ public interface GameObserver {
     ////////////////////
     abstract void updateInitGameBoard(List<List<TileTemplate>> gameBoardTiles) throws IOException;
     abstract void updatePlayerPosition(Integer currentNumPlayer, Integer[] oldPlayerPos, Integer[] newPlayerPos, TileTemplate oldTile, TileTemplate newTile, ArrayList<Player> playersOnTile) throws IOException;
-    abstract void updateMoveExtraTile(Integer posX, Integer posY);
+    abstract void updateMoveExtraTile(Integer[] newPosExtraTile, Integer[] oldPosExtraTile);
     abstract void updateMoveTilesLine(Integer[] posExtraTile);
     abstract void updateInitPlayersGoals(List<Entity>[] playersGoals) throws IOException;
     abstract void updateRotateExtraTile(Direction extraTileOrientation, Integer[] extraTilePos);
-    abstract void updateGoalsDeck();
-    abstract void updateGameEnded();
+    abstract void updateGoalsDeck(Integer numCurrentPlayer, Integer[] posGoal);
+    abstract void updateGameEnded(Integer numCurrentPlayer);
+    abstract void updateNextPlaySamePlayer() throws IOException;
+
 }
