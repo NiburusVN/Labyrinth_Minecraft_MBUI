@@ -6,13 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private Integer _posX;
-    private Integer _posY;
+    private Integer[] _position;
     private List<Entity> _goalsDeck;
 
     public Player() {
-        this._posX = null;
-        this._posY = null;
+        this._position = new Integer[2];
         this._goalsDeck = new ArrayList<>(6);
     }
 
@@ -26,16 +24,12 @@ public class Player {
 
     public Entity getCurrentGoal(){return this._goalsDeck.getFirst();}
 
-    public Integer getPosX(){
-        return this._posX;
+    public Integer[] getPosition(){
+        return this._position;
     }
 
-    public Integer getPosY(){
-        return this._posY;
-    }
-
-    public void moveTo(Integer posX, Integer posY){
-        this._posX = posX;
-        this._posY = posY;
+    public void moveTo(Integer[] position){
+        this._position[0] = position[0];
+        this._position[1] = position[1];
     }
 }

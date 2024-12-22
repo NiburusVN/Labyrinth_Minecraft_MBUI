@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
 import helpers.ImageHelper;
 
 public class GameWindow extends JFrame implements GameObserver {
@@ -165,7 +167,7 @@ public class GameWindow extends JFrame implements GameObserver {
     }
 
     @Override
-    public void updateInitGameBoard(ArrayList<TileTemplate> gameBoardTiles) throws IOException {
+    public void updateInitGameBoard(List<List<TileTemplate>> gameBoardTiles) throws IOException {
 //        for (int y = 0; y < 9; y++) {
 //            for (int x = 0; x < 9; x++) {
 //                BufferedImage imageTile;
@@ -200,7 +202,7 @@ public class GameWindow extends JFrame implements GameObserver {
     }
 
     @Override
-    public void updatePlayerPosition(Integer posX, Integer posY) {
+    public void updatePlayerPosition(Integer joueur, Integer[] position) {
 
     }
 

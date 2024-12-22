@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Intersection extends TileTemplate {
 
@@ -22,23 +21,28 @@ public class Intersection extends TileTemplate {
         ArrayList<Boolean> entries = new ArrayList<Boolean>();
 
         switch (this._orientation) {
-            case Direction.North:
+            case Direction.NORTH:
                 entries.addAll(Arrays.asList(false, true, true, true));
                 break;
 
-            case Direction.South:
+            case Direction.SOUTH:
                 entries.addAll(Arrays.asList(true, true, false, true));
                 break;
 
-            case Direction.East:
+            case Direction.EAST:
                 entries.addAll(Arrays.asList(true, false, true, true));
                 break;
 
-            case Direction.West:
+            case Direction.WEST:
                 entries.addAll(Arrays.asList(true, true, true, false));
                 break;
 
         }
         return entries;
+    }
+
+    @Override
+    public String getType() {
+        return "Intersection";
     }
 }
