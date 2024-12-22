@@ -13,7 +13,8 @@ public interface GameObserver {
     abstract void updatePlayerPosition(Integer currentNumPlayer, Integer[] oldPlayerPos, Integer[] newPlayerPos, TileTemplate oldTile, TileTemplate newTile, ArrayList<Player> playersOnTile) throws IOException;
     abstract void updateMoveExtraTile(Integer posX, Integer posY);
     abstract void updateMoveTilesLine(Integer[] posExtraTile);
-    abstract void UpdateInitPlayersGoals(List<Entity>[] playersGoals) throws IOException;
+    abstract void updateInitPlayersGoals(List<Entity>[] playersGoals) throws IOException;
+    abstract void updateRotateExtraTile(Direction extraTileOrientation, Integer[] extraTilePos);
     abstract void updateGoalsDeck();
     abstract void updateGameEnded();
 }

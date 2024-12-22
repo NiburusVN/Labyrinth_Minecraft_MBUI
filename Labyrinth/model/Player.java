@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Player {
     private Integer[] _position;
-    private List<Entity> _goalsDeck;
+    private ArrayList<Entity> _goalsDeck;
     private List<Entity> _goalsReached;
 
     public Player() {
@@ -20,7 +20,8 @@ public class Player {
     }
 
     public void removeCurrentGoal(){
-        this._goalsReached = this._goalsDeck.removeFirst();
+        this._goalsReached.add(this._goalsDeck.getFirst());
+        this._goalsDeck.removeFirst();
     }
 
     public Entity getCurrentGoal(){return this._goalsDeck.getFirst();}

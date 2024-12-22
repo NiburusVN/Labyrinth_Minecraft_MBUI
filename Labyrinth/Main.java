@@ -1,4 +1,5 @@
 import controller.GameController;
+import model.Direction;
 import model.Game;
 import view.GameWindow;
 
@@ -15,6 +16,13 @@ public class Main {
         game.addObserver(gameWindow);
         GameController gameController = new GameController(game);
         gameController.play();
+//        Integer[] extraTilePosition = new Integer[] {8, 2};
+//        gameWindow.updateMoveTilesLine(extraTilePosition);
+//        gameWindow.updateRotateExtraTile(Direction.WEST, extraTilePosition);
+//        gameWindow.updateRotateExtraTile(Direction.EAST, extraTilePosition);
+//        gameWindow.updateRotateExtraTile(Direction.SOUTH, extraTilePosition);
+//        gameWindow.updateRotateExtraTile(Direction.NORTH, extraTilePosition);
+
 
     }
 }

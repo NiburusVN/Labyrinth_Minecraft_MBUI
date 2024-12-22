@@ -179,4 +179,8 @@ public class GameBoard {
     public List<List<TileTemplate>> getGameBoardTiles(){
         return this._boardTiles;
     }
+
+    public Integer[] getExtraTilePosition(){
+        return this._extraTilePosition;
+    }
 }

@@ -278,14 +278,18 @@ public class Game{
             }
 
 
-            this.notifyUpdateMoveTilesLine(insertPos);
+            this.notifyUpdateMoveTilesLine(this._gameBoard.getExtraTilePosition());
 
         }
     }
 
     public TileTemplate showExtraTile(){return _gameBoard.getExtraTile();}
 
-    public void rotateExtraTile(Boolean clockwise){this._gameBoard.rotateExtraTile(clockwise);}
+    public void rotateExtraTile(Boolean clockwise)
+    {
+        this._gameBoard.rotateExtraTile(clockwise);
+        this.notifyUpdateRotateExtraTile(this._gameBoard.getExtraTile().getOrientation(), this._gameBoard.getExtraTilePosition());
+    }
 
     public void moveExtraTile(Boolean clockwise){this._gameBoard.moveExtraTile(clockwise);}
     //////////////////////////////////
@@ -328,6 +332,12 @@ public class Game{
         }
     }
 
+    public void notifyUpdateRotateExtraTile(Direction extraTileOrientation, Integer[] extraTilePos){
+        for(GameObserver observer: this._observers){
+            observer.updateRotateExtraTile(extraTileOrientation, extraTilePos);
+        }
+    }
+
     public void notifyUpdateMoveTilesLine(Integer[] posExtraTile){
         for(GameObserver observer: this._observers){
             observer.updateMoveTilesLine(posExtraTile);
@@ -343,7 +353,7 @@ public class Game{
 
     public void notifyUpdateInitPlayersGoals(List<Entity>[] playersGoals) throws IOException {
         for(GameObserver observer: this._observers){
-            observer.UpdateInitPlayersGoals(playersGoals);
+            observer.updateInitPlayersGoals(playersGoals);
         }
     }
 

@@ -387,10 +387,47 @@ public class GameWindow extends JFrame implements GameObserver {
         }
     }
 
+    public void updateRotateExtraTile(Direction extraTileOrientation, Integer[] extraTilePos) {
+        // Déterminer l'angle de rotation en fonction de la direction
+        int orientation = switch (extraTileOrientation) {
+            case Direction.WEST -> -90;
+            case Direction.NORTH -> 0;
+            case Direction.EAST -> 90;
+            case Direction.SOUTH -> 180;
+        };
+
+        // Récupérer l'image de l'icône
+        ImageIcon icon = (ImageIcon) this._gridCells[extraTilePos[0]][extraTilePos[1]].getIcon();
+        Image image = icon.getImage(); // Récupérer l'image contenue dans l'ImageIcon
+
+        // Si l'image n'est pas déjà un BufferedImage, la convertir
+        BufferedImage bufferedImage;
+        if (image instanceof BufferedImage) {
+            bufferedImage = (BufferedImage) image;
+        } else {
+            // Créer un BufferedImage à partir de l'image
+            bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = bufferedImage.createGraphics();
+            g2d.drawImage(image, 0, 0, null);
+            g2d.dispose();
+        }
+
+        try {
+            // Appliquer la rotation en utilisant ImageHelper
+            BufferedImage rotatedImage = ImageHelper.rotate(bufferedImage, Math.toRadians(orientation));
+
+            // Mettre à jour l'icône avec l'image tournée
+            this._gridCells[extraTilePos[0]][extraTilePos[1]].setIcon(new ImageIcon(rotatedImage));
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace(); // Gérer l'exception si l'image ne répond pas aux critères de taille
+        }
+    }
+
+
 
 
     @Override
-    public void UpdateInitPlayersGoals(List<Entity>[] playersGoals) throws IOException {
+    public void updateInitPlayersGoals(List<Entity>[] playersGoals) throws IOException {
 
         for(int i = 0; i < playersGoals.length; i++){ // size = 4
             JLabel[][] bookPlayerGoals;
@@ -429,28 +466,32 @@ public class GameWindow extends JFrame implements GameObserver {
     @Override
     public void updateMoveTilesLine(Integer[] posExtraTile) {
 
-
         if (posExtraTile[0] == 0) { // du haut vers le bas
             for (int i = 0; i < 8; i++) {
-                this._gridCells[i][posExtraTile[1]] = this._gridCells[i + 1][posExtraTile[1]];
+                ImageIcon temp = (ImageIcon) this._gridCells[i][posExtraTile[1]].getIcon();
+                this._gridCells[i][posExtraTile[1]].setIcon((ImageIcon) this._gridCells[i + 1][posExtraTile[1]].getIcon());
+                this._gridCells[i + 1][posExtraTile[1]].setIcon(temp);
             }
 
         } else if (posExtraTile[1] == 8) { // de la droite vers la gauche
             for (int i = 0; i < 8; i++) {
-                this._gridCells[posExtraTile[0]][8 - i] = this._gridCells[posExtraTile[0]][7 - i];
+                ImageIcon temp = (ImageIcon) this._gridCells[posExtraTile[0]][8 - i].getIcon();
+                this._gridCells[posExtraTile[0]][8 - i].setIcon((ImageIcon) this._gridCells[posExtraTile[0]][7 - i].getIcon());
+                this._gridCells[posExtraTile[0]][7 - i].setIcon(temp);
             }
 
-        }
-
-        else if (posExtraTile[0] == 8) { // du bas vers le haut
+        } else if (posExtraTile[0] == 8) { // du bas vers le haut
             for (int i = 0; i < 8; i++) {
-                this._gridCells[8 - i][posExtraTile[1]] = this._gridCells[7 - i][posExtraTile[1]];
+                ImageIcon temp = (ImageIcon) this._gridCells[8 - i][posExtraTile[1]].getIcon();
+                this._gridCells[8 - i][posExtraTile[1]].setIcon((ImageIcon) this._gridCells[7 - i][posExtraTile[1]].getIcon());
+                this._gridCells[7 - i][posExtraTile[1]].setIcon(temp);
             }
 
-        }
-        else if (posExtraTile[1] == 0) { // de la gauche vers la droite
+        } else if (posExtraTile[1] == 0) { // de la gauche vers la droite
             for (int i = 0; i < 8; i++) {
-                this._gridCells[posExtraTile[0]][i] = this._gridCells[posExtraTile[0]][i + 1];
+                ImageIcon temp = (ImageIcon) this._gridCells[posExtraTile[0]][i].getIcon();
+                this._gridCells[posExtraTile[0]][i].setIcon((ImageIcon) this._gridCells[posExtraTile[0]][i + 1].getIcon());
+                this._gridCells[posExtraTile[0]][i + 1].setIcon(temp);
             }
         }
     }
