@@ -25,6 +25,10 @@ public class Player {
 
     public Entity getCurrentGoal(){return this._goalsDeck.getFirst();}
 
+    public List<Entity> getGoalsDeck(){return this._goalsDeck;}
+
+    public List<Entity> getGoalsReached(){return this._goalsReached;}
+
     public Integer[] getPosition(){
         return this._position;
     }

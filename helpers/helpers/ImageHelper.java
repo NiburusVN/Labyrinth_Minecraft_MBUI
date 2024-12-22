@@ -21,28 +21,71 @@ public class ImageHelper {
 	 */
 	public static BufferedImage merge(BufferedImage image1, String[][] foregroundPaths) throws IOException {
 
+		// Log de l'image de fond
+		if (image1 == null) {
+			throw new IllegalArgumentException("Background image is null!");
+		}
+		System.out.println("Background image dimensions: " + image1.getWidth() + "x" + image1.getHeight());
+
 		BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g2d = mergedImage.createGraphics();
 		g2d.drawImage(image1, 0, 0, null);
 
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-		for (String[] data : foregroundPaths) {
-			String imagePath = data[0];
-			int x = Integer.parseInt(data[1]);
-			int y = Integer.parseInt(data[2]);
-			int width = Integer.parseInt(data[3]);
-			int height = Integer.parseInt(data[4]);
+		for (int i = 0; i < foregroundPaths.length; i++) {
+			String[] data = foregroundPaths[i];
+			if (data != null) {
+				// Log des informations de l'image foreground
+				System.out.println("Processing foreground image [" + i + "]:");
+				System.out.println("  Path: " + data[0]);
 
-			BufferedImage foregroundImage = ImageIO.read(new File(imagePath));
-			// Redimensionner et dessiner l'image
-			Image resizedImage = foregroundImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-			g2d.drawImage(resizedImage, x, y, null);
+				// Vérification de l'existence du fichier
+				File file = new File(data[0]);
+				if (!file.exists()) {
+					System.err.println("  ERROR: File does not exist at path: " + file.getAbsolutePath());
+					continue;
+				}
+
+				int x = Integer.parseInt(data[1]);
+				int y = Integer.parseInt(data[2]);
+				int width = Integer.parseInt(data[3]);
+				int height = Integer.parseInt(data[4]);
+				System.out.println("  Position: (" + x + ", " + y + ")");
+				System.out.println("  Dimensions: " + width + "x" + height);
+
+				// Lecture de l'image foreground
+				BufferedImage foregroundImage;
+				try {
+					foregroundImage = ImageIO.read(file);
+					if (foregroundImage == null) {
+						System.err.println("  ERROR: Failed to load image (null returned by ImageIO.read)");
+						continue;
+					}
+					System.out.println("  Foreground image loaded successfully. Original dimensions: "
+							+ foregroundImage.getWidth() + "x" + foregroundImage.getHeight());
+				} catch (IOException e) {
+					System.err.println("  ERROR: Failed to read image file: " + e.getMessage());
+					continue;
+				}
+
+				// Redimensionnement de l'image
+				Image resizedImage = foregroundImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+				System.out.println("  Foreground image resized successfully.");
+
+				// Dessiner l'image foreground redimensionnée
+				g2d.drawImage(resizedImage, x, y, null);
+				System.out.println("  Foreground image drawn at position (" + x + ", " + y + ").");
+			} else {
+				System.out.println("Skipping null foreground image data at index [" + i + "].");
+			}
 		}
 
 		g2d.dispose();
+		System.out.println("Merged image created successfully.");
 		return mergedImage;
 	}
+
 
 	/**
 	 *  Generate a new image from a background image and foreground images exluding a specific image
@@ -67,6 +110,8 @@ public class ImageHelper {
 			String imagePath = data[0];
 			int x = Integer.parseInt(data[1]);
 			int y = Integer.parseInt(data[2]);
+			int width = Integer.parseInt(data[3]);
+			int height = Integer.parseInt(data[4]);
 
 			// Skip the image to exclude
 			if (imagePath.equals(imageToExclude)) {
@@ -74,7 +119,8 @@ public class ImageHelper {
 			}
 
 			BufferedImage foregroundImage = ImageIO.read(new File(imagePath));
-			g2d.drawImage(foregroundImage, x, y, null);
+			Image resizedImage = foregroundImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+			g2d.drawImage(resizedImage, x, y, null);
 		}
 
 		g2d.dispose();

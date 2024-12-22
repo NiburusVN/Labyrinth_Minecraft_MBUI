@@ -70,16 +70,18 @@ public class GameBoard {
                 }
             }
         }
+        this._extraTile = tiles.getFirst();
+        this._boardTiles.get(0).set(2, this._extraTile);
     }
 
     public void initCorners(TileFactory tileFactory, List<Entity> entities){
         this._boardTiles.get(1).set(1, tileFactory.createStartingTile(Direction.EAST, entities.getFirst()));// Coin fixe 1
         entities.removeFirst();
-        this._boardTiles.get(1).set(7, tileFactory.createStartingTile(Direction.SOUTH)); // Coin fixe 2
+        this._boardTiles.get(1).set(7, tileFactory.createStartingTile(Direction.SOUTH, entities.getFirst())); // Coin fixe 2
         entities.removeFirst();
-        this._boardTiles.get(7).set(1, tileFactory.createStartingTile(Direction.NORTH)); // Coin fixe 3
+        this._boardTiles.get(7).set(1, tileFactory.createStartingTile(Direction.NORTH, entities.getFirst())); // Coin fixe 3
         entities.removeFirst();
-        this._boardTiles.get(7).set(7, tileFactory.createStartingTile(Direction.WEST)); // Coin fixe 4
+        this._boardTiles.get(7).set(7, tileFactory.createStartingTile(Direction.WEST, entities.getFirst())); // Coin fixe 4
         entities.removeFirst();
     }
 

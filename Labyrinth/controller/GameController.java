@@ -23,23 +23,23 @@ public class GameController {
     }
 
     //valider le sens de déplacement du labyrinth
-    public void validatePuttingExtraTile(Integer[] insertPos){
+    public void validatePuttingExtraTile(Integer[] insertPos) throws IOException {
         this._game.moveTilesLine(insertPos);
     }
 
     /////////////////////////////
     /// DEPLACEMENT DU JOUEUR ///
     /////////////////////////////
-    public void movePlayerUp(){
+    public void movePlayerUp() throws IOException {
         this._game.movePlayer(new Integer[] {0,-1});
     }
-    public void movePlayerDown(){
+    public void movePlayerDown() throws IOException {
         this._game.movePlayer(new Integer[] {0,1});
     }
-    public void movePlayerRight(){
+    public void movePlayerRight() throws IOException {
         this._game.movePlayer(new Integer[] {1,0});
     }
-    public void movePlayerLeft(){
+    public void movePlayerLeft() throws IOException {
         this._game.movePlayer(new Integer[] {-1,0});
     }
 }

@@ -1,10 +1,7 @@
 package view;
 
 import controller.GameController;
-import model.Direction;
-import model.GameObserver;
-import model.StartingTile;
-import model.TileTemplate;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -201,7 +198,7 @@ public class GameWindow extends JFrame implements GameObserver {
                         }
 
                         else{
-                            pathBufferedImageEntity[0][0] = "./img/CheckPoint/" + tile.getEntity().toString() + ".png";
+                            pathBufferedImageEntity[0][0] = "./img/players/test.jpg";
                         }
                         pathBufferedImageEntity[0][1] = "25";
                         pathBufferedImageEntity[0][2] = "25";
@@ -218,9 +215,6 @@ public class GameWindow extends JFrame implements GameObserver {
 
                     // Mise à jour la cellule de la grille
                     setImageInCell(this._gridCells[y][x], imageTile);
-                    File outputTest = new File("./merged_" + x + "_" + y + ".png");
-                    ImageIO.write(imageTile, "png", outputTest);
-                    System.out.println("Merged image saved at: " + outputTest.getAbsolutePath());
                 }
             }
         }
@@ -229,8 +223,204 @@ public class GameWindow extends JFrame implements GameObserver {
 
 
     @Override
-    public void updatePlayerPosition(Integer[][][] playersMoved, List<List<TileTemplate>> gameBoardTiles) {
+    public void updatePlayerPosition(Integer currentNumPlayer, Integer[] oldPlayerPos, Integer[] newPlayerPos, TileTemplate oldTile, TileTemplate newTile, ArrayList<Player> playersOnTile) throws IOException {
+        try {
+            // Ancienne position
+            if (oldPlayerPos != null && oldTile != null) {
+                System.out.println("Processing old position: " + oldPlayerPos[0] + ", " + oldPlayerPos[1]);
 
+                String oldTileType = oldTile.getType();
+                Entity oldTileEntity = oldTile.getEntity();
+                System.out.println("Old Tile Type: " + oldTileType);
+                System.out.println("Old Tile Entity: " + (oldTileEntity != null ? oldTileEntity : "No Entity"));
+
+                String[][] pathBufferedImageOnTile = new String[5][5];
+                int oldTileOrientation = switch (oldTile.getOrientation()) {
+                    case Direction.WEST -> -90;
+                    case Direction.NORTH -> 0;
+                    case Direction.EAST -> 90;
+                    case Direction.SOUTH -> 180;
+                };
+                System.out.println("Old Tile Orientation: " + oldTileOrientation);
+
+                if (oldTileEntity != null) {
+                    pathBufferedImageOnTile[0][0] = "./img/goals/" + oldTileEntity.toString() + ".png";
+                    pathBufferedImageOnTile[0][1] = "25";
+                    pathBufferedImageOnTile[0][2] = "25";
+                    pathBufferedImageOnTile[0][3] = "50";
+                    pathBufferedImageOnTile[0][4] = "50";
+                } else {
+                    pathBufferedImageOnTile[0] = null;
+                }
+
+                for (Integer i = 0; i < 4; i++) {
+                    if (!i.equals(currentNumPlayer) && playersOnTile.get(i).getPosition() == oldPlayerPos) {
+                        pathBufferedImageOnTile[i + 1][0] = "./img/players/player" + (i + 1) + ".png";
+                        System.out.println("Old Player Image Path: " + pathBufferedImageOnTile[i + 1][0]);
+
+                        if (i == 0) {
+                            pathBufferedImageOnTile[i + 1][1] = "0";
+                            pathBufferedImageOnTile[i + 1][2] = "0";
+                        } else if (i == 1) {
+                            pathBufferedImageOnTile[i + 1][1] = "100";
+                            pathBufferedImageOnTile[i + 1][2] = "0";
+                        } else if (i == 2) {
+                            pathBufferedImageOnTile[i + 1][1] = "0";
+                            pathBufferedImageOnTile[i + 1][2] = "100";
+                        } else{
+                            pathBufferedImageOnTile[i + 1][1] = "100";
+                            pathBufferedImageOnTile[i + 1][2] = "100";
+                        }
+
+                        pathBufferedImageOnTile[i + 1][3] = "50";
+                        pathBufferedImageOnTile[i + 1][4] = "50";
+                    } else {
+                        pathBufferedImageOnTile[i + 1] = null;
+                    }
+                }
+
+                String pathBufferedImageTile = "./img/Map/tiles/" + oldTileType + ".png";
+                System.out.println("Old Tile Image Path: " + pathBufferedImageTile);
+
+                BufferedImage imageTile = ImageIO.read(new File(pathBufferedImageTile));
+                imageTile = ImageHelper.rotate(imageTile, Math.toRadians(oldTileOrientation));
+                imageTile = ImageHelper.merge(imageTile, pathBufferedImageOnTile);
+
+                setImageInCell(this._gridCells[oldPlayerPos[0]][oldPlayerPos[1]], imageTile);
+            }
+
+            // Nouvelle position
+            System.out.println("Processing new position: " + newPlayerPos[0] + ", " + newPlayerPos[1]);
+
+            String newTileType = newTile.getType();
+            Entity newTileEntity = newTile.getEntity();
+            System.out.println("New Tile Type: " + newTileType);
+            System.out.println("New Tile Entity: " + (newTileEntity != null ? newTileEntity : "No Entity"));
+
+            String[][] pathBufferedImageOnTileNew = new String[5][5];
+            int newTileOrientation = switch (newTile.getOrientation()) {
+                case Direction.WEST -> -90;
+                case Direction.NORTH -> 0;
+                case Direction.EAST -> 90;
+                case Direction.SOUTH -> 180;
+            };
+            System.out.println("New Tile Orientation: " + newTileOrientation);
+
+            if (newTileEntity != null) {
+                if(!Objects.equals(newTileType, "StartingTile")) {
+                    pathBufferedImageOnTileNew[0][0] = "./img/goals/" + newTileEntity.toString() + ".png";
+                }
+                else{
+                    pathBufferedImageOnTileNew[0][0] = "./img/CheckPoint/" + newTileEntity.toString() + ".png";
+                }
+                pathBufferedImageOnTileNew[0][1] = "25";
+                pathBufferedImageOnTileNew[0][2] = "25";
+                pathBufferedImageOnTileNew[0][3] = "50";
+                pathBufferedImageOnTileNew[0][4] = "50";
+                System.out.println("New Entity Image Path: EZZZZZZZZZZZZZZZ" + pathBufferedImageOnTileNew[0][0]);
+            } else {
+                pathBufferedImageOnTileNew[0] = null;
+            }
+
+
+
+            for (int i = 0; i < 4; i++) {
+                System.out.println("Position Joueur actuelle : x : " + playersOnTile.get(i).getPosition()[0] + " y :" + playersOnTile.get(i).getPosition()[1]);
+                System.out.println("new position compare: " + newPlayerPos[0] + ", " + newPlayerPos[1]);
+                if (playersOnTile.get(i).getPosition()[0] == newPlayerPos[0] && playersOnTile.get(i).getPosition()[1] == newPlayerPos[1]) {
+                    pathBufferedImageOnTileNew[i + 1][0] = "./img/players/player"+ (i+1) +".png";
+                    System.out.println("New Player Image Path: " + pathBufferedImageOnTileNew[i + 1][0]);
+
+                    System.out.println("WESSHHH" + i);
+
+                    if (i == 0){
+                        pathBufferedImageOnTileNew[i + 1][1] = "0";
+                        pathBufferedImageOnTileNew[i + 1][2] = "0";
+                    }
+                    else if (i == 1) {
+                        pathBufferedImageOnTileNew[i + 1][1] = "50";
+                        pathBufferedImageOnTileNew[i + 1][2] = "0";
+
+                    }
+
+                    else if (i == 2) {
+                        pathBufferedImageOnTileNew[i + 1][1] = "0";
+                        pathBufferedImageOnTileNew[i + 1][2] = "50";
+                    }
+
+                    else if (i == 3) {
+                        pathBufferedImageOnTileNew[i + 1][1] = "50";
+                        pathBufferedImageOnTileNew[i + 1][2] = "50";
+                    }
+
+
+
+
+                    pathBufferedImageOnTileNew[i + 1][3] = "50";
+                    pathBufferedImageOnTileNew[i + 1][4] = "50";
+                }
+                else {
+                    pathBufferedImageOnTileNew[i + 1] = null;
+                }
+            }
+
+            String pathBufferedImageTileNew = "./img/Map/tiles/" + newTileType + ".png";
+            System.out.println("New Tile Image Path: " + pathBufferedImageTileNew);
+
+//            BufferedImage imageTileNew = ImageIO.read(new File(pathBufferedImageTileNew));
+
+
+
+            String newTileImagePath = "./img/Map/tiles/" + newTileType + ".png";
+
+            BufferedImage imageTileNew = ImageIO.read(new File(newTileImagePath));
+            imageTileNew = ImageHelper.rotate(imageTileNew, Math.toRadians(newTileOrientation));
+            imageTileNew = ImageHelper.merge(imageTileNew, pathBufferedImageOnTileNew);
+
+            setImageInCell(this._gridCells[newPlayerPos[0]][newPlayerPos[1]], imageTileNew);
+
+
+
+
+        } catch (Exception e) {
+            System.err.println("Error updating player position: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+
+    @Override
+    public void UpdateInitPlayersGoals(List<Entity>[] playersGoals) throws IOException {
+
+        for(int i = 0; i < playersGoals.length; i++){ // size = 4
+            JLabel[][] bookPlayerGoals;
+            if(i == 0){
+                bookPlayerGoals = this._player1GoalsCells;
+            }
+
+            else if (i == 1) {
+                bookPlayerGoals = this._player2GoalsCells;
+            }
+
+            else if (i == 2) {
+                bookPlayerGoals = this._player3GoalsCells;
+            }
+
+            else{
+                bookPlayerGoals = this._player4GoalsCells;
+            }
+            int index = 0;
+            for(int y = 0; y < 3; y++){
+                for(int x = 0; x < 2; x++){
+                    String pathBufferedImageGoal = "./img/goals/" + playersGoals[i].get(index).toString() + ".png";
+                    BufferedImage imageGoal = ImageIO.read(new File(pathBufferedImageGoal));
+                    setImageInCell(bookPlayerGoals[y][x], imageGoal);
+                    index++;
+                }
+            }
+            bookPlayerGoals[0][0].setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+        }
     }
 
     @Override
