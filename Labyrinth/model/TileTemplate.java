@@ -8,7 +8,6 @@ public abstract class TileTemplate {
     //Attributs
     private static final Random rand = new Random();
     protected Direction _orientation;
-    protected List<Boolean> _entries;
     protected Entity _entity = null; //default
 
     /// Constructeurs ///

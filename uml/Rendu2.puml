@@ -42,18 +42,23 @@ package model {
         +notifyUpdateRotateExtraTile(extraTileOrientation: Direction, extraTilePos:Integer[])
         +notifyUpdateMoveTilesLine(posExtraTile:Integer[])
         +notifyUpdatePlayerPosition(currentNumPlayer:Integer, oldPlayerPos:Integer[], newPlayerPos: Integer[], oldTile:TileTemplate, newTile:TileTemplate, playersOnTile:Player[])
+        +notifyUpdateInitPlayersGoals(playersGoals:Entity[])
+        +notifyUpdateMoveExtraTile(newPosExtraTile:Integer[], oldPosExtraTile:Integer[])
         +notifyUpdatePlayerPosition()
         +getCurrentPlayer(): Player
+        +notifyUpdateGoalsDeck(numCurrentPlayer:Integer, posGoal:Integer)
+        +notifyUpdateGameEnded(numCurrentPlayer:Integer)
     }
 
     class Player {
+        -_position:Integer[]
         +<<Create>> Player()
-        -_posX: Integer
-        -_posY: Integer
         +addGoal(goal: Entity)
         +removeCurrentGoal()
-        +getPosX(): Integer
-        +getPosY(): Integer
+        +getCurrentGoal():Entity
+        +getGoalsDeck():Entity[]
+        +getGoalsReach():Entity[]
+        +getPosition:Integer[]
         +moveTo(posX: Integer, posY: Integer)
     }
 
@@ -96,38 +101,46 @@ package model {
     }
 
     abstract class TileTemplate <<abstract>> {
+        -{static}rand:Random
+        #_orientation:Directin
+        #_entity:Entity
         #<<Create>> TileTemplate()
         #<<Create>> TileTemplate(orientation: Direction)
         +setOrientation(orientation: Direction)
         +getOrientation(): Direction
         +setEntity(entity: Entity)
-        +getEntity(): Entity
-        +removeEntity()
+        +getEntity(): Entit
         +{abstract}getEntries(): Boolean[4]
+        +{abstract}getType(): String
     }
 
     class Hallway extends TileTemplate {
         +<<Create>> Hallway()
         +<<Create>> Hallway(orientation: Direction)
-        +setOrientation(orientation: Direction) {redefines}
+        +getEntries(): Boolean[4] {redefines}
+        +getType(): String {redefines}
     }
 
     class Intersection extends TileTemplate {
         +<<Create>> Intersection()
         +<<Create>> Intersection(orientation: Direction)
-        +setOrientation(orientation: Direction) {redefines}
+        +getEntries(): Boolean[4] {redefines}
+        +getType(): String {redefines}
     }
 
     class Corner extends TileTemplate {
+
         +<<Create>> Corner()
         +<<Create>> Corner(orientation: Direction)
-        +setOrientation(orientation: Direction) {redefines}
+        +getEntries(): Boolean[4] {redefines}
+        +getType(): String {redefines}
     }
 
     class StartingTile extends Corner {
         +<<Create>> StartingTile()
         +<<Create>> StartingTile(orientation: Direction)
-        +setOrientation(orientation: Direction) {redefines}
+        +getEntries(): Boolean[4] {redefines}
+        +getType(): String {redefines}
     }
 
     class TileFactory {
@@ -143,42 +156,71 @@ package model {
     }
 
     class GameBoard {
+        -_extraTilePosition:Integer[]
         +<<Create>> GameBoard()
-        +init_board(tileFactory: TileFactory)
-        +insertExtraTile(posX: Integer, posY: Integer)
+        +init_board(tileFactory: TileFactory, entities:Entity[])
+        +initCorners(tileFactory:tileFactory, entities:Entity[])
+        +goalsDistribution(entities:Entity[])
+        +insertExtraTile()
+        +moveExtraTile(clockwise:Boolean)
+        +rotateExtraTile(clockwise:Boolean)
         +getExtraTile(): TileTemplate
         +getSpecificTile(): TileTemplate
+        +getGameBoardTiles():TileTemplate[][]
+        +getExtraTilePosition(): Integer[]
     }
 
     interface GameObserver <<interface>> {
-        +notifyUpdateInitGameBoard(TileTemplate[49])
-        +updatePlayerPosition(posX: Integer, posY: Integer)
-        +updateMoveTilesLine(posX: Integer, posY: Integer)
-        +updateGoalsDeck()
-        +updateGameStatus()
+        +{abstract}updateInitGameBoard(gameBoardTiles:TileTemplate[][])
+        +{abstract}updatePlayerPosition(currentNumPlayer:Integer, oldPlayerPos:Integer[], newPlayerPos: Integer[], oldTile:TileTemplate, newTile:TileTemplate, playersOnTile:Player[])
+        +{abstract}updateMoveExtraTile(newPosExtraTile:Integer[], oldPosExtraTile:Integer[])
+        +{abstract}updateMoveTilesLine(posExtraTile:Integer[])
+        +{abstract}updateInitPlayersGoals(playersGoals:Entity[])
+        +{abstract}updateRotateExtraTile(extraTileOrientation:Direction, extraTilePos:Integer[])
+        +{abstract}updateGoalsDeck(numCurrentPlayer:Integer, posGoal: Integer[])
+        +{abstract} updateNextPlaySamePlayer()
     }
+
 }
 
 package view {
     class GameWindow implements model.GameObserver {
         +<<Create>> GameWindow(controller: GameController)
+        -{static}createGrid(gridCells:JLabel[][], rows:Integer, cols:Integer, cellWidth:Integer, cellHeight:Integer):JPanel
+        -{static}createGoalsBook(goalsCells: JLabel[][] , rows:Integer, cols:Integer, slotSize:Integer, spacing:Integer):Jpanel
+        -{static}createHotbar(hotbarCells JLabel[], slotSize:Integer, spacing:Integer):JPanel
+        -{static}setImageInCell(cell:JLabel , image:BufferedImage )
+        +updateInitGameBoard(gameBoardTiles:TileTemplate[][])
+        +updatePlayerPosition(currentNumPlayer:Integer , oldPlayerPos:Integer[] , newPlayerPos:Integer[] , oldTile:TileTemplate , newTile:TileTemplate ,  playersOnTile:Player[])
+        +updateRotateExtraTile(extraTileOrientation:Direction ,extraTilePos: Integer[] )
+        +updateInitPlayersGoals(playersGoals:Entity[])
+        +updateMoveExtraTile(newPosExtraTile:Integer[] , oldPosExtraTile: Integer[])
+        +updateMoveTilesLine(posExtraTile: Integer[] )
+        +updateGoalsDeck(numCurrentPlayer:Integer, posGoal:Integer[])
+        +updateNextPlaySamePlayer()
+        +updateGameEnded(numCurrentPlayerInteger)
     }
 
-    class EndingWindow implements model.GameObserver {
-        +<<Create>> EndingWindow(controller: GameController)
+    class StartGameWindow implements model.GameObserver{
+        +<<Create>> StartGameWindow(controller: GameController)
+        +startGame()
     }
 }
 
 package controller {
     class GameController {
+        -_game:Game
         +<<Create>> GameController()
         +movePlayerUp()
         +movePlayerDown()
         +movePlayerLeft()
         +movePlayerRight()
         +validatePlayerPosition()
-        +validatePuttingExtraTile(posX: Integer, posY: Integer)
-        +startNewGame()
+        +validatePuttingExtraTile()
+        +rotateExtraTile(clockwise:Boolean)
+        +moveExtraTile(clockwise:Boolean)
+        +addObserver(gameObserver: GameObserver)
+        +play()
     }
 }
 
@@ -213,4 +255,6 @@ EndingWindow "1" *-up-> "1\n- controller" GameController : > send user requests
 Game "*" o-right-> "*\n- _observers" "GameObserver" : > observe
 Game "24" *-right-> "*\n- _valableGoals" "<<enumeration>> \n Entity" : > contains
 Game "1" *-right-> "*\n- _tileFactory" "TileFactory" : > has
+Main "1" ..> "1" GameController : <<uses>>
+Main "1" ..> "1" StartGameWindow : <<uses>>
 @enduml
