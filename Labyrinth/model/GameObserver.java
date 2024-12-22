@@ -9,8 +9,8 @@ public interface GameObserver {
     ////////////////////
     /// VIEW UPDATES ///
     ////////////////////
-    abstract void updateInitGameBoard(List<List<TileTemplate>> _gameBoardTiles) throws IOException;
-    abstract void updatePlayerPosition(Integer joueur, Integer[] position);
+    abstract void updateInitGameBoard(List<List<TileTemplate>> gameBoardTiles) throws IOException;
+    abstract void updatePlayerPosition(Integer[][][] playersMoved, List<List<TileTemplate>> gameBoardTiles);
     abstract void updateMoveTilesLine(Integer posX, Integer posY);
     abstract void updateGoalsDeck();
     abstract void updateGameEnded();

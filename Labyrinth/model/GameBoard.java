@@ -1,10 +1,6 @@
 package model;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-
+import java.util.*;
 
 
 public class GameBoard {
@@ -17,7 +13,7 @@ public class GameBoard {
     public GameBoard() {
         this._boardTiles = new ArrayList<>(9);
         for(int i = 0; i<9; i++){
-            this._boardTiles.add(new ArrayList<>(9));
+            this._boardTiles.add(Arrays.asList(null, null, null, null, null, null, null, null, null));
         }
 
         this._extraTile = null;

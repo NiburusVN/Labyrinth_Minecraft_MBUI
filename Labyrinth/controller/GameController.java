@@ -2,6 +2,8 @@ package controller;
 
 import model.Game;
 
+import java.io.IOException;
+
 public class GameController {
 
     //attribut
@@ -10,7 +12,7 @@ public class GameController {
     public GameController(Game game) {this._game = game;}
 
     //initialisation d'un partie de Labyrinth
-    public void play() {_game.startGame();}
+    public void play() throws IOException {_game.startGame();}
 
     /////////////////////////
     /// ACTIONS DU JOUEUR ///

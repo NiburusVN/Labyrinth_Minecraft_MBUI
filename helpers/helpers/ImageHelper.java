@@ -1,8 +1,7 @@
 package helpers;
 
 import javax.imageio.ImageIO;
-import java.awt.Graphics2D;
-import java.awt.AlphaComposite;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +15,12 @@ public class ImageHelper {
 	/**
 	 *  Generate a new image from a background image and a foreground image
 	 *
-	 * @param backgroundPath is the path of the background image
+	 * @param image1 is the BufferedImage of the background image
 	 * @param foregroundPaths is the list of path of the other images
 	 * @return an image combining the foreground image over the background image
 	 */
-	public static BufferedImage merge(String backgroundPath, String[][] foregroundPaths) throws IOException {
-		BufferedImage image1 = ImageIO.read(new File(backgroundPath));
+	public static BufferedImage merge(BufferedImage image1, String[][] foregroundPaths) throws IOException {
+
 		BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g2d = mergedImage.createGraphics();
@@ -32,6 +31,47 @@ public class ImageHelper {
 			String imagePath = data[0];
 			int x = Integer.parseInt(data[1]);
 			int y = Integer.parseInt(data[2]);
+			int width = Integer.parseInt(data[3]);
+			int height = Integer.parseInt(data[4]);
+
+			BufferedImage foregroundImage = ImageIO.read(new File(imagePath));
+			// Redimensionner et dessiner l'image
+			Image resizedImage = foregroundImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+			g2d.drawImage(resizedImage, x, y, null);
+		}
+
+		g2d.dispose();
+		return mergedImage;
+	}
+
+	/**
+	 *  Generate a new image from a background image and foreground images exluding a specific image
+	 *
+	 * @param image1 is the BufferedImage of the background image
+	 * @param foregroundPaths is the list of path of the other images
+	 * @return an image combining the foreground image over the background image
+	 */
+	public static BufferedImage mergeExcluding(BufferedImage image1, String[][] foregroundPaths, String imageToExclude) throws IOException {
+
+		BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g2d = mergedImage.createGraphics();
+		g2d.drawImage(image1, 0, 0, null);
+
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+		for (String[] data : foregroundPaths) {
+			if(data == null){
+				continue;
+			}
+
+			String imagePath = data[0];
+			int x = Integer.parseInt(data[1]);
+			int y = Integer.parseInt(data[2]);
+
+			// Skip the image to exclude
+			if (imagePath.equals(imageToExclude)) {
+				continue;
+			}
 
 			BufferedImage foregroundImage = ImageIO.read(new File(imagePath));
 			g2d.drawImage(foregroundImage, x, y, null);

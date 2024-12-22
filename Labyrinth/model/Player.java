@@ -8,6 +8,7 @@ import java.util.List;
 public class Player {
     private Integer[] _position;
     private List<Entity> _goalsDeck;
+    private List<Entity> _goalsReached;
 
     public Player() {
         this._position = new Integer[2];

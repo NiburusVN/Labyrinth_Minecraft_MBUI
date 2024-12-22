@@ -21,6 +21,7 @@ public enum Entity {
     PURPLE_POTION,
     RED_MUSIC_DISC,
     RED_POTION,
+    REDSTONE,
     SWORD,
     TOTEM,
     WHITE_MUSIC_DISC,

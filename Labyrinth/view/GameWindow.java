@@ -3,6 +3,7 @@ package view;
 import controller.GameController;
 import model.Direction;
 import model.GameObserver;
+import model.StartingTile;
 import model.TileTemplate;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import helpers.ImageHelper;
 
@@ -28,6 +30,7 @@ public class GameWindow extends JFrame implements GameObserver {
     private JLabel[][] _player2GoalsCells = new JLabel[3][2];
     private JLabel[][] _player3GoalsCells = new JLabel[3][2];
     private JLabel[][] _player4GoalsCells = new JLabel[3][2];
+    private JLabel backgroundLabel;
 
     public GameWindow() throws IOException {
         // Charger l'image de fond
@@ -49,7 +52,6 @@ public class GameWindow extends JFrame implements GameObserver {
 
         JPanel centerGrid = createGrid(this._gridCells, 9, 9, 100, 100);
 
-//        // Ajouter une bordure pour déboguer la grille
 //        centerGrid.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
 
         // Positionner la grille à (610, 190)
@@ -104,8 +106,8 @@ public class GameWindow extends JFrame implements GameObserver {
         player4Goals.setBounds(1695, 730, 120, 150); // 9*100 pour la taille totale
         backgroundLabel.add(player4Goals);
 
-        // Afficher la fenêtre
         setVisible(true);
+
     }
 
     private static JPanel createGrid(JLabel[][] gridCells, int rows, int cols, int cellWidth, int cellHeight) {
@@ -168,41 +170,66 @@ public class GameWindow extends JFrame implements GameObserver {
 
     @Override
     public void updateInitGameBoard(List<List<TileTemplate>> gameBoardTiles) throws IOException {
-//        for (int y = 0; y < 9; y++) {
-//            for (int x = 0; x < 9; x++) {
-//                BufferedImage imageTile;
-//                TileTemplate tile = gameBoardTiles.get(y * 9 + x); // Accéder à la tuile selon un index linéaire
-//                int orientation = switch (tile.getOrientation()) {
-//                    case Direction.West -> -90;
-//                    case Direction.North -> 0;
-//                    case Direction.East -> 90;
-//                    case Direction.South -> 180;
-//                };
-//
-//                String type = tile.getType();
-//                String pathBufferedImageTile = "./img/Map/tiles/" + type + ".png";
-//
-//
-//                if(tile.getEntity() != null) {
-//                    String[][] pathBufferedImageEntity = new String[1][3];
-//                    pathBufferedImageEntity[0][0] = "./img/goals/" + tile.getEntity().toString() + ".png";
-//                    pathBufferedImageEntity[0][0] = "25";
-//                    pathBufferedImageEntity[0][0] = "25";
-//                    imageTile = ImageHelper.merge(pathBufferedImageTile, pathBufferedImageEntity);
-//                }
-//
-//                else{
-//                    imageTile = ImageIO.read(new File(pathBufferedImageTile));
-//                }
-//
-//
-//                setImageInCell(this._gridCells[y][x], imageTile);
-//            }
-//        }
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                TileTemplate tile = gameBoardTiles.get(y).get(x);
+                if (tile != null) {
+                    System.out.println(tile.getType().toString());
+                    System.out.println(x);
+                    System.out.println(y);
+                    BufferedImage imageTile;
+                    int orientation = switch (tile.getOrientation()) {
+                        case Direction.WEST -> -90;
+                        case Direction.NORTH -> 0;
+                        case Direction.EAST -> 90;
+                        case Direction.SOUTH -> 180;
+                    };
+
+                    // Charger image de la tuile
+                    String type = tile.getType();
+                    String pathBufferedImageTile = "./img/Map/tiles/" + type + ".png";
+                    imageTile = ImageIO.read(new File(pathBufferedImageTile));
+
+                    // rotation de la tuile
+                    imageTile = ImageHelper.rotate(imageTile, Math.toRadians(orientation));
+
+                    // vérifie l'entité si elle existe
+                    if (tile.getEntity() != null) {
+                        String[][] pathBufferedImageEntity = new String[1][5];
+                        if(!Objects.equals(tile.getType(), "StartingTile")) {
+                            pathBufferedImageEntity[0][0] = "./img/goals/" + tile.getEntity().toString() + ".png";
+                        }
+
+                        else{
+                            pathBufferedImageEntity[0][0] = "./img/CheckPoint/" + tile.getEntity().toString() + ".png";
+                        }
+                        pathBufferedImageEntity[0][1] = "25";
+                        pathBufferedImageEntity[0][2] = "25";
+                        pathBufferedImageEntity[0][3] = "50";
+                        pathBufferedImageEntity[0][4] = "50";
+                        System.out.println(tile.getEntity().toString());
+                        imageTile = ImageHelper.merge(imageTile, pathBufferedImageEntity);
+
+                    }
+
+                    else{
+                        imageTile = ImageIO.read(new File(pathBufferedImageTile));
+                    }
+
+                    // Mise à jour la cellule de la grille
+                    setImageInCell(this._gridCells[y][x], imageTile);
+                    File outputTest = new File("./merged_" + x + "_" + y + ".png");
+                    ImageIO.write(imageTile, "png", outputTest);
+                    System.out.println("Merged image saved at: " + outputTest.getAbsolutePath());
+                }
+            }
+        }
+
     }
 
+
     @Override
-    public void updatePlayerPosition(Integer joueur, Integer[] position) {
+    public void updatePlayerPosition(Integer[][][] playersMoved, List<List<TileTemplate>> gameBoardTiles) {
 
     }
 

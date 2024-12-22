@@ -33,16 +33,18 @@ public class Game{
     /// FONCTIONS D'INITIALISATION ///
     //////////////////////////////////
     //fonction init pour commencer un jeu
-    public void startGame(){
+    public void startGame() throws IOException {
         this.initGameBoard();//terrain
         this.initGoals();//objectifs sur terrain
+        printGameBoard(this._gameBoard.getGameBoardTiles());
         this.notifyUpdateInitGameBoard(this._gameBoard.getGameBoardTiles());
-        this.distributePlayersGoals();//objectifs des joueurs
-        this.initPlayersPosition();//position des joueurs
+
+        //this.distributePlayersGoals();//objectifs des joueurs
+        //this.initPlayersPosition();//position des joueurs
     }
 
     //fonction qui crée les tuiles pour le terrain
-    public void initGameBoard(){
+    public void initGameBoard() throws IOException {
         this._gameBoard.initBoard(this._tileFactory, new ArrayList<>(this._valableGoals.subList(24, 28)));
     }
 
@@ -61,6 +63,7 @@ public class Game{
     }
 
     public void initPlayersPosition(){
+        Integer[][][] playersMoved = new Integer[4][2][2];
         for (int i = 0; i < 4; i++){
             switch(i){
                 case 0: this._players.get(i).moveTo(new Integer[]{1,1});break;
@@ -68,8 +71,11 @@ public class Game{
                 case 2: this._players.get(i).moveTo(new Integer[]{7,1});break;
                 case 3: this._players.get(i).moveTo(new Integer[]{7,7});break;
             }
-            notifyUpdatePlayerPosition(i, this._players.get(i).getPosition());
+            playersMoved[this._playerTurn][0] = null;
+            playersMoved[this._playerTurn][1] = this._players.get(i).getPosition();
         }
+        this.notifyUpdatePlayerPosition(playersMoved, this._gameBoard.getGameBoardTiles());
+
     }
 
     //ajout d'un oberver
@@ -103,6 +109,8 @@ public class Game{
                 this.getCurrentPlayer().getPosition()[1]+position[1] //pos Horizontal
         };
 
+        Integer[][][] playersMoved = new Integer[][][]{null, null, null, null};
+
         if((posTuile[0])>0 &&
         (posTuile[0])<8 &&
         (posTuile[1])>0 &&
@@ -118,24 +126,36 @@ public class Game{
                 if(this._gameBoard.getSpecificTile(posJoueur).getEntries().get(1) &&
                 this._gameBoard.getSpecificTile(posTuile).getEntries().get(3)){ // Vérification d'un passage valide
                     this.getCurrentPlayer().moveTo(posTuile); // déplacement vers la tuile
+                    playersMoved[this._playerTurn][0] = posJoueur; // ancienne pos
+                    playersMoved[this._playerTurn][1] = posTuile; // nouvelle pos
+                    this.notifyUpdatePlayerPosition(playersMoved, this._gameBoard.getGameBoardTiles());
                 }
             }
-            if (position[0] == 1){ //déplacement vers le sud
+            else if (position[0] == 1){ //déplacement vers le sud
                 if(this._gameBoard.getSpecificTile(posJoueur).getEntries().get(3) &&
                         this._gameBoard.getSpecificTile(posTuile).getEntries().get(1)){ // Vérification d'un passage valide
                     this.getCurrentPlayer().moveTo(posTuile); // déplacement vers la tuile
+                    playersMoved[this._playerTurn][0] = posJoueur; // ancienne pos
+                    playersMoved[this._playerTurn][1] = posTuile; // nouvelle pos
+                    this.notifyUpdatePlayerPosition(playersMoved, this._gameBoard.getGameBoardTiles());
                 }
             }
-            if (position[1] == -1){ //déplacement vers l'ouest
+            else if (position[1] == -1){ //déplacement vers l'ouest
                 if(this._gameBoard.getSpecificTile(posJoueur).getEntries().get(0) &&
                         this._gameBoard.getSpecificTile(posTuile).getEntries().get(2)){ // Vérification d'un passage valide
                     this.getCurrentPlayer().moveTo(posTuile); // déplacement vers la tuile
+                    playersMoved[this._playerTurn][0] = posJoueur; // ancienne pos
+                    playersMoved[this._playerTurn][1] = posTuile; // nouvelle pos
+                    this.notifyUpdatePlayerPosition(playersMoved, this._gameBoard.getGameBoardTiles());
                 }
             }
-            if (position[1] == 1){ //déplacement vers l'est
+            else if (position[1] == 1){ //déplacement vers l'est
                 if(this._gameBoard.getSpecificTile(posJoueur).getEntries().get(2) &&
                         this._gameBoard.getSpecificTile(posTuile).getEntries().get(0)){ // Vérification d'un passage valide
                     this.getCurrentPlayer().moveTo(posTuile); // déplacement vers la tuile
+                    playersMoved[this._playerTurn][0] = posJoueur; // ancienne pos
+                    playersMoved[this._playerTurn][1] = posTuile; // nouvelle pos
+                    this.notifyUpdatePlayerPosition(playersMoved, this._gameBoard.getGameBoardTiles());
                 }
             }
             else{
@@ -159,6 +179,8 @@ public class Game{
         }
         else {
 
+            Integer[][][] playersMoved = new Integer[4][2][2];
+
             //déplacement des tuiles du labyrinth + rétention de l'action contraire
             this._blockedInsert = this._gameBoard.insertExtraTile();
 
@@ -167,43 +189,63 @@ public class Game{
                 for (int i = 1; i < 4; i++) { //pour tous les joueurs
                     //Le joueur est déplacé avec le terrain
                     if (Objects.equals(this._players.get(i).getPosition()[1], insertPos[1]) && this._players.get(i).getPosition()[0] == 7) { // il est éjecté du terrain
+                        playersMoved[i][0] = this._players.get(i).getPosition();
                         this._players.get(i).moveTo(new Integer[]{1, insertPos[1]});
-                    } else { // il n'est pas éjecté
+                        playersMoved[i][1] = this._players.get(i).getPosition();
+                    } 
+                    
+                    else 
+                    { // il n'est pas éjecté
+                        playersMoved[i][0] = this._players.get(i).getPosition();
                         this._players.get(i).moveTo(new Integer[]{this._players.get(i).getPosition()[0] + 1, this._players.get(i).getPosition()[1]});
+                        playersMoved[i][1] = this._players.get(i).getPosition();
                     }
+                    //
                 }
             } else if (insertPos[0] == 8) { //du bas vers le haut
                 for (int i = 1; i < 4; i++) { //pour tous les joueurs
                     //Le joueur est déplacé avec le terrain
                     if (Objects.equals(this._players.get(i).getPosition()[1], insertPos[1]) && this._players.get(i).getPosition()[0] == 1) { // il est éjecté du terrain
+                        playersMoved[i][0] = this._players.get(i).getPosition();
                         this._players.get(i).moveTo(new Integer[]{7, insertPos[1]});
+                        playersMoved[i][1] = this._players.get(i).getPosition();
                     } else { // il n'est pas éjecté
+                        playersMoved[i][0] = this._players.get(i).getPosition();
                         this._players.get(i).moveTo(new Integer[]{this._players.get(i).getPosition()[0] - 1, this._players.get(i).getPosition()[1]});
+                        playersMoved[i][1] = this._players.get(i).getPosition();
                     }
                 }
             } else if (insertPos[1] == 0) { //de la gauche vers la droite
                 for (int i = 1; i < 4; i++) { //pour tous les joueurs
                     //Le joueur est déplacé avec le terrain
                     if (Objects.equals(this._players.get(i).getPosition()[0], insertPos[0]) && this._players.get(i).getPosition()[1] == 7) { // il est éjecté du terrain
+                        playersMoved[i][0] = this._players.get(i).getPosition();
                         this._players.get(i).moveTo(new Integer[]{this._players.get(i).getPosition()[0], 1});
+                        playersMoved[i][1] = this._players.get(i).getPosition();
                     } else { // il n'est pas éjecté
+                        playersMoved[i][0] = this._players.get(i).getPosition();
                         this._players.get(i).moveTo(new Integer[]{this._players.get(i).getPosition()[0], this._players.get(i).getPosition()[1] + 1});
+                        playersMoved[i][1] = this._players.get(i).getPosition();
                     }
                 }
             } else if (insertPos[1] == 8) { //de la droite vers la gauche
                 for (int i = 1; i < 4; i++) { //pour tous les joueurs
                     //Le joueur est déplacé avec le terrain
                     if (Objects.equals(this._players.get(i).getPosition()[0], insertPos[0]) && this._players.get(i).getPosition()[1] == 1) { // il est éjecté du terrain
+                        playersMoved[i][0] = this._players.get(i).getPosition();
                         this._players.get(i).moveTo(new Integer[]{this._players.get(i).getPosition()[0], 7});
+                        playersMoved[i][1] = this._players.get(i).getPosition();
                     } else { // il n'est pas éjecté
+                        playersMoved[i][0] = this._players.get(i).getPosition();
                         this._players.get(i).moveTo(new Integer[]{this._players.get(i).getPosition()[0], this._players.get(i).getPosition()[1] - 1});
+                        playersMoved[i][1] = this._players.get(i).getPosition();
                     }
                 }
             }
             //notifyInsertedTile
-            for (int i = 0; i < 4; i++) {
-                notifyUpdatePlayerPosition(i, this._players.get(i).getPosition());
-            }
+
+            this.notifyUpdatePlayerPosition(playersMoved, this._gameBoard.getGameBoardTiles());
+
         }
     }
 
@@ -258,9 +300,24 @@ public class Game{
         }
     }
 
-    public void notifyUpdatePlayerPosition(Integer joueur, Integer[] position){
+    public void notifyUpdatePlayerPosition(Integer[][][] playersMoved, List<List<TileTemplate>> gameBoardTiles){
+        //Integer[][][] avec 0 = ancienne pos et 1 = nouvelle pos
         for(GameObserver observer: this._observers){
-            observer.updatePlayerPosition(joueur, position);
+            observer.updatePlayerPosition(playersMoved, gameBoardTiles);
+        }
+    }
+
+    public void printGameBoard(List<List<TileTemplate>> gameBoardTiles) {
+        for (int y = 0; y < gameBoardTiles.size(); y++) {
+            for (int x = 0; x < gameBoardTiles.get(y).size(); x++) {
+                TileTemplate tile = gameBoardTiles.get(y).get(x);
+                if (tile != null) {
+                    System.out.print(tile.getType() + "\t"); // Affiche le type de la tuile
+                } else {
+                    System.out.print("X\t"); // Affiche X si la case est null
+                }
+            }
+            System.out.println(); // Nouvelle ligne pour la prochaine rangée
         }
     }
 }
