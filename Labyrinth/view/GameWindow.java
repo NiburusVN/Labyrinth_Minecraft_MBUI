@@ -1,6 +1,5 @@
 package view;
 
-import controller.GameController;
 import model.*;
 
 import javax.swing.*;
@@ -422,9 +421,13 @@ public class GameWindow extends JFrame implements GameObserver {
             bookPlayerGoals[0][0].setBorder(BorderFactory.createLineBorder(Color.RED, 3));
         }
     }
+    @Override
+    public void updateMoveExtraTile(Integer posX, Integer posY){}
 
     @Override
-    public void updateMoveTilesLine(Integer posX, Integer posY) {}
+    public void updateMoveTilesLine(Integer posX, Integer posY) {
+
+    }
 
     @Override
     public void updateGoalsDeck() {}

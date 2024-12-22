@@ -345,6 +345,12 @@ public class Game{
         }
     }
 
+    public void notifyUpdateMoveExtraTile(Integer posX, Integer posY){
+        for(GameObserver observer: this._observers){
+            observer.updateMoveExtraTile(posX, posY);
+        }
+    }
+
     public void printGameBoard(List<List<TileTemplate>> gameBoardTiles) {
         for (int y = 0; y < gameBoardTiles.size(); y++) {
             for (int x = 0; x < gameBoardTiles.get(y).size(); x++) {
