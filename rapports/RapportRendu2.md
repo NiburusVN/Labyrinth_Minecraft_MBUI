@@ -125,3 +125,13 @@ Par rapport au premier rendu, on a ajouté l'attribut `_blockedInsert` qui retie
     + rotation
     + déplacement
 - plus de `notify`
+
+
+## Edit de dernière minute:
+
+Lors de l'implémentation swing, on a rencontré un souci de duplication:
+Le joueur se déplace, cependant il est dupliqué sur toutes les cases où il passe.
+
+Et ainsi, la détection des objectifs du joueur ne marche plus.
+
+Du coup: tout marche sauf le déplacement des joueurs.
