@@ -422,12 +422,39 @@ public class GameWindow extends JFrame implements GameObserver {
         }
     }
     @Override
-    public void updateMoveExtraTile(Integer posX, Integer posY){}
-
-    @Override
-    public void updateMoveTilesLine(Integer posX, Integer posY) {
+    public void updateMoveExtraTile(Integer posX, Integer posY){
 
     }
+
+    @Override
+    public void updateMoveTilesLine(Integer[] posExtraTile) {
+
+
+        if (posExtraTile[0] == 0) { // du haut vers le bas
+            for (int i = 0; i < 8; i++) {
+                this._gridCells[i][posExtraTile[1]] = this._gridCells[i + 1][posExtraTile[1]];
+            }
+
+        } else if (posExtraTile[1] == 8) { // de la droite vers la gauche
+            for (int i = 0; i < 8; i++) {
+                this._gridCells[posExtraTile[0]][8 - i] = this._gridCells[posExtraTile[0]][7 - i];
+            }
+
+        }
+
+        else if (posExtraTile[0] == 8) { // du bas vers le haut
+            for (int i = 0; i < 8; i++) {
+                this._gridCells[8 - i][posExtraTile[1]] = this._gridCells[7 - i][posExtraTile[1]];
+            }
+
+        }
+        else if (posExtraTile[1] == 0) { // de la gauche vers la droite
+            for (int i = 0; i < 8; i++) {
+                this._gridCells[posExtraTile[0]][i] = this._gridCells[posExtraTile[0]][i + 1];
+            }
+        }
+    }
+
 
     @Override
     public void updateGoalsDeck() {}

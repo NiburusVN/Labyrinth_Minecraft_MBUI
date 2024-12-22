@@ -136,7 +136,7 @@ public class GameBoard {
             this._extraTilePosition = new Integer[] {position[0], 8};
         }
 
-        else if(position[1] == 8){ //de la gauche vers la droite
+        else if(position[1] == 8){ //de la droite vers la droite
             for(int i = 0; i<8; i++){
                 this._boardTiles.get(position[0]).set(i, this._boardTiles.get(position[0]).get(i+1));
             }
