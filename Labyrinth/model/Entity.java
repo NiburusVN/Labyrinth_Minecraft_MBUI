@@ -23,5 +23,9 @@ public enum Entity {
     RED_POTION,
     SWORD,
     TOTEM,
-    WHITE_MUSIC_DISC
+    WHITE_MUSIC_DISC,
+    CHECKPOINT_1,
+    CHECKPOINT_2,
+    CHECKPOINT_3,
+    CHECKPOINT_4
 }

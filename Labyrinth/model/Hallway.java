@@ -1,9 +1,7 @@
 package model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Hallway extends TileTemplate {
 
@@ -24,15 +22,20 @@ public class Hallway extends TileTemplate {
 
         switch (this._orientation) {
 
-            case Direction.North:
-            case Direction.South:
+            case Direction.NORTH:
+            case Direction.SOUTH:
                 entries.addAll(Arrays.asList(false, true, false, true));
 
-            case Direction.East:
-            case Direction.West:
+            case Direction.EAST:
+            case Direction.WEST:
                 entries.addAll(Arrays.asList(true, false, true, false));
 
         }
         return entries;
+    }
+
+    @Override
+    public String getType() {
+        return "Hallway";
     }
 }

@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Corner extends TileTemplate {
 
@@ -22,24 +21,29 @@ public class Corner extends TileTemplate {
         ArrayList<Boolean> entries = new ArrayList<Boolean>();
 
         switch (this._orientation) {
-            case Direction.North:
+            case Direction.NORTH:
                 entries.addAll(Arrays.asList(false, true, true, false));
                 break;
 
-            case Direction.South:
+            case Direction.SOUTH:
                 entries.addAll(Arrays.asList(true, false, false, true));
                 break;
 
-            case Direction.East:
+            case Direction.EAST:
                 entries.addAll(Arrays.asList(false, false, true, true));
                 break;
 
-            case Direction.West:
+            case Direction.WEST:
                 entries.addAll(Arrays.asList(true, true, false, false));
                 break;
 
         }
         return entries;
+    }
+
+    @Override
+    public String getType() {
+        return "Corner";
     }
 
 }
