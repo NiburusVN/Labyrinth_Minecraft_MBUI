@@ -9,18 +9,6 @@ public class GameController {
 
     public GameController(Game game) {this._game = game;}
 
-    /////////////////////////
-    /// ACTIONS DU JOUEUR ///
-    /////////////////////////
-    //valider la position du joueurs pour passer à la suite
-    public void validatePlayerPosition(){
-        this._game.nextPlayer();
-    }
-
-    //valider le sens de déplacement du labyrinth
-    public void validatePuttingExtraTile(Integer posX, Integer posY){
-        this._game.moveTilesLine(posX, posY);
-    }
 
     /////////////////////////////
     /// DEPLACEMENT DU JOUEUR ///

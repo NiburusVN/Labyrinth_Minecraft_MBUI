@@ -140,7 +140,7 @@ public class GameBoard {
             for(int i = 0; i < 6 ; i++)
                 this._boardTiles.get(posY).set(i, this._boardTiles.get(posY).get(i+1));
 
-            this._boardTiles.get(posY).set(6, _extraTile);
+            this._boardTiles.get(posY).set(6, this._extraTile);
             this._extraTile = oldTile;
         }
         else{

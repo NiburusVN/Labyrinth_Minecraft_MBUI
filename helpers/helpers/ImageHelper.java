@@ -1,3 +1,5 @@
+package helpers;
+
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
@@ -18,16 +20,23 @@ public class ImageHelper {
 	 * @param foregroundPaths is the list of path of the other images
 	 * @return an image combining the foreground image over the background image
 	 */
-	public static BufferedImage merge(String backgroundPath, String... foregroundPaths ) throws IOException {
+	public static BufferedImage merge(String backgroundPath, String[][] foregroundPaths) throws IOException {
 		BufferedImage image1 = ImageIO.read(new File(backgroundPath));
-		BufferedImage mergedImage = new BufferedImage( image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage mergedImage = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
 		Graphics2D g2d = mergedImage.createGraphics();
 		g2d.drawImage(image1, 0, 0, null);
+
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-		for ( String path : foregroundPaths ) {
-			BufferedImage image2 = ImageIO.read(new File(path));
-			g2d.drawImage(image2, 0, 0, null);
+		for (String[] data : foregroundPaths) {
+			String imagePath = data[0];
+			int x = Integer.parseInt(data[1]);
+			int y = Integer.parseInt(data[2]);
+
+			BufferedImage foregroundImage = ImageIO.read(new File(imagePath));
+			g2d.drawImage(foregroundImage, x, y, null);
 		}
+
 		g2d.dispose();
 		return mergedImage;
 	}

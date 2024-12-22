@@ -1,81 +1,215 @@
 package view;
+
 import controller.GameController;
+import model.Direction;
 import model.GameObserver;
 import model.TileTemplate;
 
-import javax.swing.*; //peut-être spécifier seulement les composants utilisés
-import java.util.List;
-
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import java.awt.Graphics2D;
-import java.awt.AlphaComposite;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-
+import helpers.ImageHelper;
 
 public class GameWindow extends JFrame implements GameObserver {
-    public GameWindow(GameController controller) {
-        super("The Labyrinth");
-        setSize( 500, 500 );
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        JPanel BoardPanel = new JPanel();
-        BoardPanel.setLayout( new GridLayout(7, 7) );
+    private JLabel[][] _gridCells = new JLabel[9][9];
+    // Ajouter les hotbars
+    private JLabel[] _player1HotbarCells = new JLabel[6];
+    private JLabel[] _player2HotbarCells = new JLabel[6];
+    private JLabel[] _player3HotbarCells = new JLabel[6];
+    private JLabel[] _player4HotbarCells = new JLabel[6];
+    private JLabel[][] _player1GoalsCells = new JLabel[3][2];
+    private JLabel[][] _player2GoalsCells = new JLabel[3][2];
+    private JLabel[][] _player3GoalsCells = new JLabel[3][2];
+    private JLabel[][] _player4GoalsCells = new JLabel[3][2];
 
-        BufferedImage tuileAngle = new ImageIO.read("/img/exempleTuiles/tuile_angle.png");
-        ImageIcon tuileLine = new ImageIcon("/img/exempleTuiles/tuile_line.png");
-        ImageIcon tuileIntersection = new ImageIcon("/img/exempleTuiles/tuile_T.png");
+    public GameWindow() throws IOException {
+        // Charger l'image de fond
+        BufferedImage backgroundImage = ImageIO.read(new File("./img/Map/map.png"));
+
+        // Configurer la fenêtre principale
+        super("Labyrinth");
+        setSize(1920, 1080);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setUndecorated(true); // Supprimer les bordures et barre de titre
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // JLabel contenant l'image de fond
+        JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundImage));
+        backgroundLabel.setLayout(null);
+        add(backgroundLabel);
+
+        // Créer et ajouter la grille
+
+        JPanel centerGrid = createGrid(this._gridCells, 9, 9, 100, 100);
+
+//        // Ajouter une bordure pour déboguer la grille
+//        centerGrid.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+
+        // Positionner la grille à (610, 190)
+        centerGrid.setBounds(510, 90, 900, 900); // 9*100 pour la taille totale
+        backgroundLabel.add(centerGrid);
 
 
-        for (int i = 0; i < 49; i++) {
-            JPanel cellPanel = new JPanel();
-            cellPanel.setLayout(new OverlayLayout(cellPanel));
 
-            JLabel tuileLabel = new JLabel();
+        // Hotbar du joueur 1 (haut gauche)
+        JPanel player1Hotbar = createHotbar(this._player1HotbarCells, 50, 20);
+        player1Hotbar.setBounds(20, 110, 400, 50); // Position et taille fixe
+        backgroundLabel.add(player1Hotbar);
 
-            JLabel personnageLabel = new JLabel();
+        // Hotbar du joueur 2 (haut droite)
+        JPanel player2Hotbar = createHotbar(this._player2HotbarCells, 50, 20);
+        player2Hotbar.setBounds(1430, 110, 400, 50); // Position et taille fixe
+        backgroundLabel.add(player2Hotbar);
 
-            // Ajouter les labels dans le panel de la cellule
-            cellPanel.add(personnageLabel); // Ajouté après pour être superposé
-            cellPanel.add(tuileLabel);
+        // Hotbar du joueur 3 (bas gauche)
+        JPanel player3Hotbar = createHotbar(this._player3HotbarCells, 50, 20);
+        player3Hotbar.setBounds(20, 920, 400, 50); // Position et taille fixe
+        backgroundLabel.add(player3Hotbar);
 
-            // Ajouter la cellule dans la grille
-            BoardPanel.add(cellPanel);
+        // Hotbar du joueur 4 (bas droite)
+        JPanel player4Hotbar = createHotbar(this._player4HotbarCells, 50, 20);
+        player4Hotbar.setBounds(1430, 920, 400, 50); // Position et taille fixe
+        backgroundLabel.add(player4Hotbar);
+
+        //Goals Book joueur 1
+        JPanel player1Goals = createGoalsBook(this._player1GoalsCells, 3, 2, 50, 20);
+
+        player1Goals.setBounds(105, 220, 120, 150); // 9*100 pour la taille totale
+        backgroundLabel.add(player1Goals);
+
+        //Goals Book joueur 2
+        JPanel player2Goals = createGoalsBook(this._player2GoalsCells, 3, 2, 50, 20);
+
+        player2Goals.setBounds(1695, 220, 120, 150); // 9*100 pour la taille totale
+        backgroundLabel.add(player2Goals);
+
+
+        //Goals Book joueur 3
+        JPanel player3Goals = createGoalsBook(this._player3GoalsCells, 3, 2, 50, 20);
+
+        player3Goals.setBounds(105, 730, 120, 150); // 9*100 pour la taille totale
+        backgroundLabel.add(player3Goals);
+
+
+        //Goals Book joueur 4
+        JPanel player4Goals = createGoalsBook(this._player4GoalsCells, 3, 2, 50, 20);
+
+        player4Goals.setBounds(1695, 730, 120, 150); // 9*100 pour la taille totale
+        backgroundLabel.add(player4Goals);
+
+        // Afficher la fenêtre
+        setVisible(true);
+    }
+
+    private static JPanel createGrid(JLabel[][] gridCells, int rows, int cols, int cellWidth, int cellHeight) {
+        JPanel grid = new JPanel(new GridLayout(rows, cols));
+        grid.setOpaque(false); // Permet de voir l'image de fond
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                JLabel cell = new JLabel();
+                cell.setPreferredSize(new Dimension(cellWidth, cellHeight));
+                cell.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Bordure pour debug
+                gridCells[row][col] = cell;
+                grid.add(cell);
+            }
+        }
+        return grid;
+    }
+
+    private static JPanel createGoalsBook(JLabel[][] goalsCells, int rows, int cols, int slotSize, int spacing) {
+        JPanel goalsBook = new JPanel(new GridLayout(rows, cols, spacing, 0));
+        goalsBook.setOpaque(false); // Permet de voir l'image de fond
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                JLabel slot = new JLabel();
+                slot.setPreferredSize(new Dimension(slotSize, slotSize));
+                slot.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Bordure pour debug
+                goalsCells[row][col] = slot;
+                goalsBook.add(slot);
+            }
+        }
+        return goalsBook;
+    }
+
+    private static JPanel createHotbar(JLabel[] hotbarCells, int slotSize, int spacing) {
+        JPanel hotbar = new JPanel(new GridLayout(1, hotbarCells.length, spacing, 0));
+        hotbar.setOpaque(false); // Permet de voir l'image de fond
+
+        for (int i = 0; i < hotbarCells.length; i++) {
+            JLabel slot = new JLabel();
+            slot.setPreferredSize(new Dimension(slotSize, slotSize));
+            slot.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Bordure des slots pour debug
+            hotbarCells[i] = slot;
+            hotbar.add(slot);
         }
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        Panel.add( button1, constraints );
-        constraints.gridx = 1;
-        Panel.add( button2, constraints );
-        constraints.gridx = 2;
-        Panel.add( button3, constraints );
+        return hotbar;
+    }
 
-        setVisible(true);
+    private static void setImageInCell(JLabel cell, BufferedImage image) {
+        int cellWidth = cell.getPreferredSize().width;
+        int cellHeight = cell.getPreferredSize().height;
+
+        // Redimensionner l'image pour qu'elle s'adapte à la cellule
+        Image scaledImage = image.getScaledInstance(cellWidth, cellHeight, Image.SCALE_SMOOTH);
+
+        // Ajouter l'image au JLabel
+        cell.setIcon(new ImageIcon(scaledImage));
+    }
+
+    @Override
+    public void updateInitGameBoard(ArrayList<TileTemplate> gameBoardTiles) throws IOException {
+//        for (int y = 0; y < 9; y++) {
+//            for (int x = 0; x < 9; x++) {
+//                BufferedImage imageTile;
+//                TileTemplate tile = gameBoardTiles.get(y * 9 + x); // Accéder à la tuile selon un index linéaire
+//                int orientation = switch (tile.getOrientation()) {
+//                    case Direction.West -> -90;
+//                    case Direction.North -> 0;
+//                    case Direction.East -> 90;
+//                    case Direction.South -> 180;
+//                };
+//
+//                String type = tile.getType();
+//                String pathBufferedImageTile = "./img/Map/tiles/" + type + ".png";
+//
+//
+//                if(tile.getEntity() != null) {
+//                    String[][] pathBufferedImageEntity = new String[1][3];
+//                    pathBufferedImageEntity[0][0] = "./img/goals/" + tile.getEntity().toString() + ".png";
+//                    pathBufferedImageEntity[0][0] = "25";
+//                    pathBufferedImageEntity[0][0] = "25";
+//                    imageTile = ImageHelper.merge(pathBufferedImageTile, pathBufferedImageEntity);
+//                }
+//
+//                else{
+//                    imageTile = ImageIO.read(new File(pathBufferedImageTile));
+//                }
+//
+//
+//                setImageInCell(this._gridCells[y][x], imageTile);
+//            }
+//        }
+    }
+
+    @Override
+    public void updatePlayerPosition(Integer posX, Integer posY) {
 
     }
 
     @Override
-    public void updateGameBoard() {
-
-    }
+    public void updateMoveTilesLine(Integer posX, Integer posY) {}
 
     @Override
-    public void updatePlayerPosition() {
-
-    }
+    public void updateGoalsDeck() {}
 
     @Override
-    public void updateGoalsDeck() {
-
-    }
-
-    @Override
-    public void updateGameEnded() {
-
-    }
+    public void updateGameEnded() {}
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -206,7 +207,7 @@ public class Game{
     ///////////////////////////
     /// FONCTIONS DE NOTIFY ///
     ///////////////////////////
-    public void notifyUpdateInitGameBoard(ArrayList<TileTemplate> gameBoardTiles){
+    public void notifyUpdateInitGameBoard(ArrayList<TileTemplate> gameBoardTiles) throws IOException {
         for(GameObserver observer: this._observers){
             observer.updateInitGameBoard(gameBoardTiles);
         }
