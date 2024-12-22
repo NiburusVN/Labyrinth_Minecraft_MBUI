@@ -152,7 +152,79 @@ public class GameBoard {
         return this._extraTilePosition;
     }
 
-    public void moveExtraTile(Boolean clockwise){}
+    //déplace la 50e pièce ; true → dans le sens des aiguilles d'une montre, sinon l'autre sens
+    public void moveExtraTile(Boolean clockwise){
+        if(clockwise){ // Sens des aiguilles d'une montre.
+            //Il faut savoir sur quel bord est la 50e pièce
+            if(this._extraTilePosition[0] == 0) { //sur le bord en haut
+                if(this._extraTilePosition[1]== 6){ //au bout → change de bord
+                    this._extraTilePosition = new Integer[] {2,8};
+                }
+                else{ //reste sur le même bord
+                    this._extraTilePosition[1] += 2;
+                }
+            }
+            else if(this._extraTilePosition[0] == 8) { //sur le bord en bas
+                if(this._extraTilePosition[1]== 2){ //au bout → change de bord
+                    this._extraTilePosition = new Integer[] {6,0};
+                }
+                else{ //reste sur le même bord
+                    this._extraTilePosition[1] -= 2;
+                }
+            }
+            else if(this._extraTilePosition[1] == 0){ //sur le bord à gauche
+                if(this._extraTilePosition[0] == 2){ //au bout → change de bord
+                    this._extraTilePosition = new Integer[] {0,2};
+                }
+                else { //reste sur le même bord
+                    this._extraTilePosition[0] -= 2;
+                }
+            }
+            else if(this._extraTilePosition[1] == 8){ //sur le bord à gauche
+                if(this._extraTilePosition[0] == 6){ //au bout → change de bord
+                    this._extraTilePosition = new Integer[] {8,6};
+                }
+                else { //reste sur le même bord
+                    this._extraTilePosition[0] += 2;
+                }
+            }
+        }
+        else{
+            //Il faut savoir sur quel bord est la 50e pièce
+            if(this._extraTilePosition[0] == 0) { //sur le bord en haut
+                if(this._extraTilePosition[1]== 2){ //au bout → change de bord
+                    this._extraTilePosition = new Integer[] {2,0};
+                }
+                else{ //reste sur le même bord
+                    this._extraTilePosition[1] -= 2;
+                }
+            }
+            else if(this._extraTilePosition[0] == 8) { //sur le bord en bas
+                if(this._extraTilePosition[1]== 6){ //au bout → change de bord
+                    this._extraTilePosition = new Integer[] {6,8};
+                }
+                else{ //reste sur le même bord
+                    this._extraTilePosition[1] += 2;
+                }
+            }
+            else if(this._extraTilePosition[1] == 0){ //sur le bord à gauche
+                if(this._extraTilePosition[0] == 6){ //au bout → change de bord
+                    this._extraTilePosition = new Integer[] {8,2};
+                }
+                else { //reste sur le même bord
+                    this._extraTilePosition[0] += 2;
+                }
+            }
+            else if(this._extraTilePosition[1] == 8){ //sur le bord à gauche
+                if(this._extraTilePosition[0] == 2){ //au bout → change de bord
+                    this._extraTilePosition = new Integer[] {0,6};
+                }
+                else { //reste sur le même bord
+                    this._extraTilePosition[0] -= 2;
+                }
+            }
+        }
+    }
 
     //tourne la 50e pièce ; true → dans le sens des aiguilles d'une montre, sinon l'autre sens.
     public void rotateExtraTile(Boolean clockwise){
