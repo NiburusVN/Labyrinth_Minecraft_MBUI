@@ -276,7 +276,9 @@ public class Game{
                     }
                 }
             }
-            //notifyInsertedTile
+
+
+            this.notifyUpdateMoveTilesLine(insertPos);
 
         }
     }
@@ -326,9 +328,9 @@ public class Game{
         }
     }
 
-    public void notifyUpdateMoveTilesLine(Integer posX, Integer posY){
+    public void notifyUpdateMoveTilesLine(Integer[] posExtraTile){
         for(GameObserver observer: this._observers){
-            observer.updateMoveTilesLine(posX, posY);
+            observer.updateMoveTilesLine(posExtraTile);
         }
     }
 
