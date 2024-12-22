@@ -20,7 +20,7 @@ public class Player {
     }
 
     public void removeCurrentGoal(){
-        this._goalsDeck.removeFirst();
+        this._goalsReached = this._goalsDeck.removeFirst();
     }
 
     public Entity getCurrentGoal(){return this._goalsDeck.getFirst();}
