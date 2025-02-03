@@ -31,3 +31,8 @@ Compilez le fichier avec votre IDE.
 > ***Note:** Notre projet utilise Java Swing afin d'avoir une interface graphique. assurez vous de pouvoir importer `javax.swing.*`*
 
 Malheureusement, il n'y a pas de fichier executable qui permet de compiler directement le projet sans difficulté.
+
+
+### Aperçu de l'interface en Java Swing du jeu:
+
+![image](https://github.com/user-attachments/assets/9f1067ac-2562-497c-97ca-5beebc304af8)
